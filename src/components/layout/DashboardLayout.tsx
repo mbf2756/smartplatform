@@ -23,6 +23,7 @@ const SUB = [
   {href:"/sip",        label:"Monthly buy planner",   icon:"⟳"},
   {href:"/scenarios",  label:"What if scenarios",    icon:"◈"},
   {href:"/portfolios", label:"Model ETF portfolios", icon:"⊞"},
+  {href:"/shares",     label:"Model share portfolio",icon:"◉"},
 ];
 const ALL = [...FREE,...SUB];
 
@@ -180,6 +181,7 @@ export default function DashboardLayout({children,isSubscriber,userEmail}:P){
                 {path==="/sip"       &&"Tell us your monthly amount — we tell you exactly which ETF to buy"}
                 {path==="/scenarios" &&"Goal-based portfolio modelling and comparison"}
                 {path==="/settings"  &&"Update your ETF holdings and personal details"}
+                {path==="/shares"    &&"High-quality stocks from ASX 100, S&P 500 and Nasdaq-100"}
               </div>
             </div>
           </div>
