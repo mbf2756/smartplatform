@@ -1,259 +1,275 @@
 "use client";
-// ─────────────────────────────────────────────────────────────────────────────
-// Shared UI primitives — used by both SmartETF and SmartSuper
-// ─────────────────────────────────────────────────────────────────────────────
-
-import React from "react";
-import { clsx } from "clsx";
-
-// ── cn utility ────────────────────────────────────────────────────────────────
-export function cn(...inputs: (string | undefined | null | false)[]) {
-  return clsx(inputs);
-}
-
-// ── Button ────────────────────────────────────────────────────────────────────
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "ghost" | "danger";
-  size?: "sm" | "md" | "lg";
-  loading?: boolean;
-}
-
-export function Button({
-  variant = "secondary", size = "md", loading, children, className, disabled, ...props
-}: ButtonProps) {
-  const base = "inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
-  const variants = {
-    primary:   "bg-teal-600 text-white hover:bg-teal-700 focus-visible:ring-teal-500",
-    secondary: "border border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800",
-    ghost:     "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
-    danger:    "bg-red-600 text-white hover:bg-red-700",
-  };
-  const sizes = { sm: "text-xs px-3 py-1.5", md: "text-sm px-4 py-2", lg: "text-base px-6 py-3" };
-
-  return (
-    <button
-      className={cn(base, variants[variant], sizes[size], className)}
-      disabled={disabled || loading}
-      {...props}
-    >
-      {loading ? <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" /> : null}
-      {children}
-    </button>
-  );
-}
-
-// ── Card ──────────────────────────────────────────────────────────────────────
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  accent?: "teal" | "blue" | "amber" | "red" | "purple";
-}
-export function Card({ children, accent, className, ...props }: CardProps) {
-  const accents = {
-    teal:   "border-l-4 border-l-teal-500 rounded-r-xl",
-    blue:   "border-l-4 border-l-blue-500 rounded-r-xl",
-    amber:  "border-l-4 border-l-amber-500 rounded-r-xl",
-    red:    "border-l-4 border-l-red-500 rounded-r-xl",
-    purple: "border-l-4 border-l-purple-500 rounded-r-xl",
-  };
-  return (
-    <div
-      className={cn(
-        "bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4 md:p-5 mb-3",
-        accent && accents[accent],
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-
-// ── SectionLabel ──────────────────────────────────────────────────────────────
-export function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="text-xs font-medium tracking-widest uppercase text-gray-400 mt-5 mb-2 pb-1 border-b border-gray-100 dark:border-gray-800">
-      {children}
-    </div>
-  );
-}
-
-// ── Badge ─────────────────────────────────────────────────────────────────────
-interface BadgeProps { children: React.ReactNode; color?: "green"|"blue"|"amber"|"red"|"purple"|"gray" }
-export function Badge({ children, color = "gray" }: BadgeProps) {
-  const colors = {
-    green:  "bg-teal-50 text-teal-700 border border-teal-200",
-    blue:   "bg-blue-50 text-blue-700 border border-blue-200",
-    amber:  "bg-amber-50 text-amber-700 border border-amber-200",
-    red:    "bg-red-50 text-red-700 border border-red-200",
-    purple: "bg-purple-50 text-purple-700 border border-purple-200",
-    gray:   "bg-gray-100 text-gray-600 border border-gray-200",
-  };
-  return (
-    <span className={cn("inline-block text-xs font-medium px-2 py-0.5 rounded-md mr-1 mb-1", colors[color])}>
-      {children}
-    </span>
-  );
-}
+import React, { useState } from "react";
+import { C, S, scoreColor } from "@/lib/styles";
 
 // ── ScoreRing ─────────────────────────────────────────────────────────────────
-export function ScoreRing({ score, size = 80 }: { score: number; size?: number }) {
-  const r = size / 2 - 6;
+export function ScoreRing({ score, size=80, label }: { score:number; size?:number; label?:string }) {
+  const r = size/2 - 7;
   const circ = 2 * Math.PI * r;
-  const fill = circ * (1 - score / 100);
-  const color = score >= 75 ? "#1D9E75" : score >= 50 ? "#EF9F27" : "#E24B4A";
-
+  const fill = circ * (1 - score/100);
+  const col = scoreColor(score);
   return (
-    <svg width={size} height={size} className="flex-shrink-0" aria-label={`Health score: ${score}`}>
-      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#f3f4f6" strokeWidth={5} />
-      <circle
-        cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={5}
-        strokeDasharray={circ} strokeDashoffset={fill}
-        strokeLinecap="round"
-        transform={`rotate(-90 ${size/2} ${size/2})`}
-        style={{ transition: "stroke-dashoffset 0.6s ease" }}
-      />
-      <text
-        x={size/2} y={size/2 + 1} textAnchor="middle" dominantBaseline="middle"
-        fill={color} fontSize={size * 0.25} fontWeight={500} fontFamily="inherit"
-      >
-        {score}
-      </text>
-    </svg>
+    <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+      <svg width={size} height={size} aria-label={`Score: ${score}`}>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#F3F4F6" strokeWidth={7}/>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={col} strokeWidth={7}
+          strokeDasharray={circ} strokeDashoffset={fill}
+          strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`}
+          style={{transition:"stroke-dashoffset 0.6s ease"}}/>
+        <text x={size/2} y={size/2+1} textAnchor="middle" dominantBaseline="middle"
+          fill={col} fontSize={size*0.26} fontWeight={700} fontFamily="inherit">{score}</text>
+      </svg>
+      {label && <div style={{fontSize:12,color:C.gray500,fontWeight:500}}>{label}</div>}
+    </div>
   );
 }
 
 // ── MiniBar ───────────────────────────────────────────────────────────────────
-export function MiniBar({
-  value, max = 100, color = "#1D9E75", height = 5,
-}: {
-  value: number; max?: number; color?: string; height?: number;
-}) {
-  const pct = Math.min(100, (value / max) * 100);
+export function MiniBar({ value, max=100, color=C.teal, height=6 }:
+  { value:number; max?:number; color?:string; height?:number }) {
+  const pct = Math.min(100, (value/max)*100);
   return (
-    <div className="flex-1 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden" style={{ height }}>
-      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: color, height }} />
-    </div>
-  );
-}
-
-// ── Metric card ───────────────────────────────────────────────────────────────
-export function MetricCard({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-center">
-      <div className="text-xl font-medium text-gray-900 dark:text-white">{value}</div>
-      <div className="text-xs text-gray-500 mt-0.5">{label}</div>
+    <div style={{flex:1,height,background:"#F3F4F6",borderRadius:height/2,overflow:"hidden"}}>
+      <div style={{width:`${pct}%`,height,background:color,borderRadius:height/2,
+        transition:"width 0.4s ease"}}/>
     </div>
   );
 }
 
 // ── ScoreRow ──────────────────────────────────────────────────────────────────
-export function ScoreRow({ label, score }: { label: string; score: number }) {
-  const color = score >= 75 ? "#1D9E75" : score >= 50 ? "#EF9F27" : "#E24B4A";
+export function ScoreRow({ label, score, max=100 }: { label:string; score:number; max?:number }) {
+  const col = scoreColor(score);
   return (
-    <div className="flex items-center gap-3 mb-2">
-      <div className="w-36 text-xs text-gray-500 flex-shrink-0">{label}</div>
-      <MiniBar value={score} color={color} />
-      <span className="text-xs font-medium min-w-[24px] text-right" style={{ color }}>{score}</span>
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+      <div style={{width:160,fontSize:13,color:C.gray600,flexShrink:0}}>{label}</div>
+      <MiniBar value={score} max={max} color={col}/>
+      <div style={{fontSize:13,fontWeight:700,color:col,minWidth:28,textAlign:"right"}}>{score}</div>
     </div>
   );
 }
 
-// ── IssuePill ─────────────────────────────────────────────────────────────────
-export function IssuePill({ severity }: { severity: "high"|"medium"|"low" }) {
-  const styles = {
-    high:   "bg-red-50 text-red-700 border border-red-200",
-    medium: "bg-amber-50 text-amber-700 border border-amber-200",
-    low:    "bg-gray-100 text-gray-600 border border-gray-200",
+// ── MetricGrid ────────────────────────────────────────────────────────────────
+export function MetricGrid({ items }: { items: {value:string; label:string; color?:string}[] }) {
+  return (
+    <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(items.length,4)},1fr)`,gap:10,margin:"12px 0"}}>
+      {items.map(({value,label,color}) => (
+        <div key={label} style={S.metricBox}>
+          <span style={{...S.metricValue, color: color ?? C.gray900}}>{value}</span>
+          <span style={S.metricLabel}>{label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── IssueCard ─────────────────────────────────────────────────────────────────
+export function IssueCard({ severity, message, impact }:
+  { severity:"high"|"medium"|"low"; message:string; impact?:string }) {
+  const colors = {
+    high:   { dot:C.red, bg:C.redLight, text:C.redDark },
+    medium: { dot:C.amber, bg:C.amberLight, text:C.amberDark },
+    low:    { dot:C.gray400, bg:"#F9FAFB", text:C.gray600 },
   };
-  return <span className={cn("text-xs px-2 py-0.5 rounded-md font-medium", styles[severity])}>{severity}</span>;
+  const c = colors[severity];
+  return (
+    <div style={{display:"flex",alignItems:"flex-start",gap:10,padding:"10px 0",
+      borderBottom:`1px solid ${C.gray100}`}}>
+      <div style={{width:8,height:8,borderRadius:"50%",background:c.dot,
+        flexShrink:0,marginTop:5}}/>
+      <div style={{flex:1}}>
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
+          <span style={{fontSize:14,color:C.gray800,lineHeight:1.5}}>{message}</span>
+          <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:5,
+            background:c.bg,color:c.text,flexShrink:0}}>{severity}</span>
+        </div>
+        {impact && <p style={{fontSize:12,color:C.gray500,margin:"3px 0 0",lineHeight:1.5}}>{impact}</p>}
+      </div>
+    </div>
+  );
+}
+
+// ── StrengthCard ──────────────────────────────────────────────────────────────
+export function StrengthCard({ message }: { message:string }) {
+  return (
+    <div style={{display:"flex",alignItems:"flex-start",gap:10,padding:"8px 0"}}>
+      <span style={{color:C.teal,fontSize:16,flexShrink:0,marginTop:1}}>✓</span>
+      <span style={{fontSize:14,color:C.gray700,lineHeight:1.5}}>{message}</span>
+    </div>
+  );
+}
+
+// ── SectionLabel ──────────────────────────────────────────────────────────────
+export function SectionLabel({ children }: { children:React.ReactNode }) {
+  return <div style={S.sectionLabel}>{children}</div>;
+}
+
+// ── PageHeader ────────────────────────────────────────────────────────────────
+export function PageHeader({ title, subtitle, badge }:
+  { title:string; subtitle?:string; badge?:string }) {
+  return (
+    <div style={{marginBottom:24}}>
+      {badge && (
+        <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase",
+          color:C.teal,marginBottom:6}}>{badge}</div>
+      )}
+      <h1 style={{fontSize:26,fontWeight:700,color:C.gray900,margin:0,lineHeight:1.25}}>{title}</h1>
+      {subtitle && <p style={{fontSize:15,color:C.gray500,margin:"6px 0 0",lineHeight:1.6}}>{subtitle}</p>}
+    </div>
+  );
+}
+
+// ── Card ──────────────────────────────────────────────────────────────────────
+export function Card({ children, accent, style: extraStyle }:
+  { children:React.ReactNode; accent?:string; style?:React.CSSProperties }) {
+  return (
+    <div style={{
+      ...S.card,
+      ...(accent ? {borderLeft:`4px solid ${accent}`,borderRadius:"0 12px 12px 0"} : {}),
+      ...extraStyle,
+    }}>
+      {children}
+    </div>
+  );
 }
 
 // ── LockOverlay ───────────────────────────────────────────────────────────────
-export function LockOverlay({ onUnlock, label = "Subscriber feature" }: { onUnlock: () => void; label?: string }) {
+export function LockOverlay({ onUnlock }: { onUnlock:()=>void }) {
   return (
-    <div className="relative mt-2">
-      <div className="blur-sm pointer-events-none opacity-40 select-none bg-gray-50 rounded-lg p-4 text-sm text-gray-400 leading-loose dark:bg-gray-800">
-        Score: 72/100 ████████ Fee: 88/100 ████████ Div: 68/100 ████████
+    <div style={{position:"relative",marginTop:8}}>
+      <div style={{filter:"blur(4px)",pointerEvents:"none",opacity:0.3,
+        background:"#F9FAFB",borderRadius:10,padding:"16px",
+        fontSize:13,color:C.gray500,lineHeight:2}}>
+        Overlap score: 72 · Fee efficiency: 88 · Diversification: 68 · Factor: growth 74%
       </div>
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-gray-400">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        <p className="text-sm font-medium text-gray-900 dark:text-white">{label}</p>
-        <Button variant="primary" size="sm" onClick={onUnlock}>Unlock full access — $19/mo</Button>
+      <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",
+        alignItems:"center",justifyContent:"center",gap:10}}>
+        <div style={{fontSize:24,color:C.gray300}}>🔒</div>
+        <div style={{fontSize:14,fontWeight:600,color:C.gray800}}>Subscriber feature</div>
+        <div style={{fontSize:13,color:C.gray500,textAlign:"center",maxWidth:240}}>
+          Unlock full analysis, optimiser, and SIP coordinator
+        </div>
+        <button onClick={onUnlock} style={{
+          ...S.btnPrimary, marginTop:4}}>
+          Unlock — $19/mo
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── ProgressBar ───────────────────────────────────────────────────────────────
+export function ProgressBar({ value, max=100, color=C.teal, showLabel=true }:
+  { value:number; max?:number; color?:string; showLabel?:boolean }) {
+  const pct = Math.min(100, (value/max)*100);
+  return (
+    <div style={{display:"flex",alignItems:"center",gap:10}}>
+      <div style={{flex:1,height:8,background:"#F3F4F6",borderRadius:4,overflow:"hidden"}}>
+        <div style={{width:`${pct}%`,height:8,background:color,borderRadius:4,
+          transition:"width 0.5s ease"}}/>
+      </div>
+      {showLabel && <span style={{fontSize:12,fontWeight:600,color,minWidth:32,textAlign:"right"}}>
+        {Math.round(value)}%
+      </span>}
+    </div>
+  );
+}
+
+// ── GeoBar ────────────────────────────────────────────────────────────────────
+export function GeoBar({ region, pct, color }: { region:string; pct:number; color:string }) {
+  return (
+    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:8}}>
+      <div style={{width:64,fontSize:13,color:C.gray600,flexShrink:0}}>{region}</div>
+      <div style={{flex:1,height:8,background:"#F3F4F6",borderRadius:4,overflow:"hidden"}}>
+        <div style={{width:`${Math.min(100,pct)}%`,height:8,background:color,borderRadius:4,
+          transition:"width 0.5s"}}/>
+      </div>
+      <div style={{fontSize:13,fontWeight:600,color:C.gray800,minWidth:44,textAlign:"right"}}>
+        {pct.toFixed(1)}%
       </div>
     </div>
   );
 }
 
 // ── Input ─────────────────────────────────────────────────────────────────────
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-}
-export function Input({ label, className, ...props }: InputProps) {
+export function Input({ label, ...props }: { label?:string } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div>
-      {label && <label className="block text-xs text-gray-500 mb-1">{label}</label>}
-      <input
-        className={cn(
-          "w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700",
-          "bg-white dark:bg-gray-900 text-gray-900 dark:text-white",
-          "focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent",
-          className
-        )}
-        {...props}
-      />
+      {label && <label style={{display:"block",fontSize:12,color:C.gray500,
+        fontWeight:500,marginBottom:5}}>{label}</label>}
+      <input style={S.input} {...props}/>
     </div>
   );
 }
 
 // ── Select ────────────────────────────────────────────────────────────────────
-interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  label?: string;
-}
-export function Select({ label, className, children, ...props }: SelectProps) {
+export function Select({ label, children, ...props }: { label?:string } & React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <div>
-      {label && <label className="block text-xs text-gray-500 mb-1">{label}</label>}
-      <select
-        className={cn(
-          "w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700",
-          "bg-white dark:bg-gray-900 text-gray-900 dark:text-white",
-          "focus:outline-none focus:ring-2 focus:ring-teal-500",
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </select>
+      {label && <label style={{display:"block",fontSize:12,color:C.gray500,
+        fontWeight:500,marginBottom:5}}>{label}</label>}
+      <select style={{...S.input,appearance:"none" as const}} {...props}>{children}</select>
     </div>
   );
 }
 
-// ── Tab bar ───────────────────────────────────────────────────────────────────
-export function TabBar({
-  tabs, active, onChange,
-}: {
-  tabs: { id: string; label: string }[];
-  active: string;
-  onChange: (id: string) => void;
-}) {
+// ── OverlapBadge ──────────────────────────────────────────────────────────────
+export function OverlapBadge({ pct }: { pct:number }) {
+  const sev = pct > 70 ? "high" : pct > 35 ? "medium" : "low";
+  const colors = {
+    high:   { bg:C.redLight, text:C.redDark },
+    medium: { bg:C.amberLight, text:C.amberDark },
+    low:    { bg:C.greenLight, text:C.greenDark },
+  };
+  const c = colors[sev];
   return (
-    <div className="flex gap-1 flex-wrap mb-5">
-      {tabs.map(t => (
-        <button
-          key={t.id}
-          onClick={() => onChange(t.id)}
-          className={cn(
-            "px-3 py-1.5 text-xs rounded-lg cursor-pointer transition-colors",
-            active === t.id
-              ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium border border-gray-300 dark:border-gray-600"
-              : "text-gray-500 hover:text-gray-700 border border-transparent hover:border-gray-200"
-          )}
-        >
-          {t.label}
-        </button>
-      ))}
+    <span style={{fontSize:12,fontWeight:700,padding:"3px 10px",borderRadius:20,
+      background:c.bg,color:c.text}}>{pct}% overlap</span>
+  );
+}
+
+// ── ScoreBand — horizontal gauge strip ───────────────────────────────────────
+export function ScoreBand({ score }: { score:number }) {
+  const label = score >= 85 ? "Excellent" : score >= 70 ? "Good"
+    : score >= 50 ? "Fair" : "Needs work";
+  const color = scoreColor(score);
+  return (
+    <div style={{display:"flex",alignItems:"center",gap:12,
+      padding:"12px 16px",background:C.gray50,borderRadius:10}}>
+      <div style={{fontSize:32,fontWeight:800,color,lineHeight:1}}>{score}</div>
+      <div>
+        <div style={{fontSize:15,fontWeight:700,color}}>{label}</div>
+        <div style={{fontSize:12,color:C.gray400,marginTop:1}}>Portfolio health score</div>
+      </div>
+      <div style={{flex:1,marginLeft:8}}>
+        <div style={{height:10,background:"#E5E7EB",borderRadius:5,overflow:"hidden",position:"relative"}}>
+          <div style={{width:`${score}%`,height:10,borderRadius:5,
+            background:`linear-gradient(90deg, ${C.red} 0%, ${C.amber} 45%, ${C.teal} 80%)`,
+            transition:"width 0.6s ease"}}/>
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",
+          fontSize:10,color:C.gray400,marginTop:3}}>
+          <span>0</span><span>50</span><span>100</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── FeatureCard — for landing/upgrade pages ───────────────────────────────────
+export function FeatureCard({ icon, title, desc, badge }:
+  { icon:string; title:string; desc:string; badge?:string }) {
+  return (
+    <div style={{...S.card,display:"flex",gap:16,alignItems:"flex-start"}}>
+      <div style={{width:40,height:40,borderRadius:10,background:C.tealLight,
+        display:"flex",alignItems:"center",justifyContent:"center",
+        fontSize:20,flexShrink:0}}>{icon}</div>
+      <div>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+          <div style={{fontSize:15,fontWeight:600,color:C.gray900}}>{title}</div>
+          {badge && <span style={S.badgeGreen}>{badge}</span>}
+        </div>
+        <div style={{fontSize:13,color:C.gray500,lineHeight:1.6}}>{desc}</div>
+      </div>
     </div>
   );
 }
