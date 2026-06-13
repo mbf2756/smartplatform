@@ -5,13 +5,14 @@ import { usePathname } from "next/navigation";
 import { C } from "@/lib/styles";
 
 const NAV = [
-  { href:"/dashboard",  icon:"⊕", label:"Health score",      tier:"free" },
-  { href:"/overlap",    icon:"⊗", label:"Overlap scanner",   tier:"free" },
-  { href:"/exposure",   icon:"◎", label:"Exposure map",      tier:"free" },
-  { href:"/optimiser",  icon:"↗", label:"Portfolio optimiser",tier:"sub"  },
-  { href:"/sip",        icon:"⟳", label:"SIP coordinator",   tier:"sub"  },
-  { href:"/scenarios",  icon:"◈", label:"What if scenarios",  tier:"sub"  },
-  { href:"/settings",   icon:"⚙", label:"My portfolio",      tier:"free" },
+  { href:"/dashboard",  icon:"⊕", label:"Health score",         tier:"free" },
+  { href:"/overlap",    icon:"⊗", label:"Overlap scanner",      tier:"free" },
+  { href:"/exposure",   icon:"◎", label:"Exposure map",         tier:"free" },
+  { href:"/optimiser",  icon:"↗", label:"Portfolio optimiser",  tier:"sub"  },
+  { href:"/sip",        icon:"⟳", label:"SIP coordinator",      tier:"sub"  },
+  { href:"/scenarios",  icon:"◈", label:"What if scenarios",    tier:"sub"  },
+  { href:"/portfolios", icon:"⊞", label:"Portfolio marketplace",tier:"sub"  },
+  { href:"/settings",   icon:"⚙", label:"My portfolio",         tier:"free" },
 ];
 
 interface Props {
@@ -137,7 +138,6 @@ export default function DashboardLayout({ children, isSubscriber, userEmail }: P
         width:240,flexShrink:0,background:C.sidebarBg,
         position:"sticky",top:0,height:"100vh",overflowY:"auto",
         display:"none",
-        ["@media(min-width:768px)" as any]:{}
       }} className="sidebar-desktop">
         <SidebarContent/>
       </div>
