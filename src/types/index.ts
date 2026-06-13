@@ -125,6 +125,7 @@ export interface PortfolioAnalysis {
   };
   hasEMExposure: boolean;
   hasSmallCap: boolean;
+  etfKeys: string[];
   totalBrokerage: number;
   totalPortfolio: number;
 }
