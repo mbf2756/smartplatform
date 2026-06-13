@@ -330,7 +330,7 @@ export default function PortfolioMarketplace(){
           </Pill>
         ))}
         <span style={{color:"#CBD5E1",margin:"0 4px"}}>|</span>
-        <span style={{fontSize:12,color:"#94A3B8",fontWeight:500}}>Risk:</span>
+        <span style={{fontSize:12,color:"#94A3B8",fontWeight:500}}>Risk level:</span>
         {RISK_FILTERS.map(r=>(
           <Pill key={r.id} active={risk===r.id} onClick={()=>setRisk(r.id)}>
             {r.label}
