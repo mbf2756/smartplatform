@@ -418,93 +418,311 @@ export function SIPPage({ profile, isSubscriber, onUnlock, saveProfile }: Props)
     return generateSIPPlan(profile, analysis);
   }, [analysis, profile]);
 
+  const holdings = profile.portfolio?.holdings.filter(h=>h.balance>0) ?? [];
+  const totalBrok = analysis?.totalBrokerage ?? 0;
+  const buyItems = sipPlan.filter(p=>p.action==="buy");
+  const totalBuy = buyItems.reduce((s,p)=>s+p.buyAmount,0);
+  const hasTargets = holdings.some(h=>h.targetPct>0);
+
   return (
     <div>
-      <PageHeader badge="SmartETF · Subscriber tool" title="SIP coordinator"
-        subtitle="Monthly DCA instructions — exactly which ETF to buy to maintain target allocation without selling."/>
+      {/* Renamed: Monthly buy planner */}
+      <div style={{marginBottom:20}}>
+        <div style={{fontSize:11,fontWeight:600,letterSpacing:".07em",textTransform:"uppercase",
+          color:C.teal,marginBottom:4}}>SmartETF · Subscriber tool</div>
+        <h1 style={{fontSize:26,fontWeight:700,color:C.gray900,margin:"0 0 6px"}}>
+          Monthly buy planner
+        </h1>
+        <p style={{fontSize:15,color:C.gray500,margin:0,lineHeight:1.6}}>
+          Tell SmartETF how much you invest each month. It tells you exactly which ETF to buy —
+          keeping your portfolio on target without ever needing to sell.
+        </p>
+      </div>
 
       {!isSubscriber ? (
         <Card>
-          <FeatureCard icon="⟳" title="SIP coordinator"
-            desc="Enter your monthly contribution amount and get exact buy instructions for each fund to stay on target — no selling, no wasted brokerage."/>
+          <FeatureCard icon="⟳" title="Monthly buy planner"
+            desc="Enter your monthly investment amount and get exact buy instructions for each ETF to stay on target — no selling, no CGT events, no guesswork."/>
           <LockOverlay onUnlock={onUnlock}/>
         </Card>
       ) : (
         <>
-          <Card>
-            <SectionLabel>Monthly contribution</SectionLabel>
-            <div style={{display:"flex",alignItems:"center",gap:12}}>
-              <Input label="DCA amount per month ($)" type="number"
-                value={profile.monthlyContrib}
-                onChange={e=>saveProfile?.({monthlyContrib:parseInt(e.target.value)||0})}
-                style={{width:160}}/>
-              <div style={{fontSize:13,color:C.gray500,marginTop:18,lineHeight:1.5}}>
-                Smart ETF allocates this across your underweight positions each month.
-              </div>
+          {/* How it works explainer */}
+          <div style={{background:"#fff",border:`1px solid ${C.gray200}`,borderRadius:12,
+            padding:"18px 22px",marginBottom:16}}>
+            <div style={{fontSize:13,fontWeight:700,color:C.gray900,marginBottom:12}}>
+              How it works
             </div>
-          </Card>
-
-          {sipPlan.length === 0 ? (
-            <Card>
-              <div style={{textAlign:"center",padding:"32px 0",color:C.gray400}}>
-                <div style={{fontSize:32,marginBottom:8}}>📋</div>
-                Set target % allocations in My Portfolio to generate your SIP plan.
-              </div>
-            </Card>
-          ) : (
-            <>
-              {sipPlan.map(item => (
-                <div key={item.ticker} style={{
-                  ...S.card,
-                  display:"flex",alignItems:"center",gap:14,
-                  background: item.action==="buy" ? "#F0FDF8" : C.white,
-                  border: `1px solid ${item.action==="buy" ? C.tealMid : C.gray200}`,
-                }}>
-                  <div style={{width:56,flexShrink:0}}>
-                    <div style={{fontSize:18,fontWeight:700,color:C.gray900}}>{item.ticker}</div>
-                    <div style={{fontSize:11,color:C.gray400}}>{item.targetPct}% target</div>
-                  </div>
-                  <div style={{flex:1}}>
-                    <div style={{display:"flex",justifyContent:"space-between",
-                      fontSize:12,color:C.gray400,marginBottom:4}}>
-                      <span>Current {item.currentPct.toFixed(1)}%</span>
-                      <span style={{color:item.driftPct<-2?C.teal:item.driftPct>2?C.red:C.gray400}}>
-                        {item.driftPct>0?`+${item.driftPct}% over`:
-                          item.driftPct<0?`${item.driftPct}% under`:"On target"}
-                      </span>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
+              {[
+                {n:"1",title:"Set your targets",
+                 desc:"Add target % to each ETF in My Portfolio. E.g. VGS 40%, NDQ 25%, VAS 35%.",
+                 icon:"🎯"},
+                {n:"2",title:"Enter your monthly amount",
+                 desc:"How much you invest each month — $500, $1,500, or whatever fits your budget.",
+                 icon:"💵"},
+                {n:"3",title:"Get your buy instruction",
+                 desc:"SmartETF tells you exactly which ETF is most underweight and how much to buy.",
+                 icon:"✅"},
+              ].map(({n,title,desc,icon})=>(
+                <div key={n} style={{display:"flex",gap:12,alignItems:"flex-start"}}>
+                  <div style={{width:28,height:28,borderRadius:"50%",background:C.tealLight,
+                    display:"flex",alignItems:"center",justifyContent:"center",
+                    fontSize:13,fontWeight:700,color:C.tealDark,flexShrink:0}}>{n}</div>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:600,color:C.gray900,marginBottom:3}}>
+                      {icon} {title}
                     </div>
-                    <MiniBar value={item.currentPct} max={60}
-                      color={item.driftPct<-2?C.teal:item.driftPct>2?C.red:C.amber} height={7}/>
-                  </div>
-                  <div style={{textAlign:"right",flexShrink:0,minWidth:80}}>
-                    {item.action==="buy" ? (
-                      <>
-                        <div style={{fontSize:18,fontWeight:700,color:C.teal}}>
-                          {fmtAUD(item.buyAmount)}
-                        </div>
-                        <div style={{fontSize:11,color:C.tealDark}}>buy this month</div>
-                      </>
-                    ) : (
-                      <div style={{fontSize:13,color:C.gray400}}>hold / skip</div>
-                    )}
+                    <div style={{fontSize:12,color:C.gray500,lineHeight:1.5}}>{desc}</div>
                   </div>
                 </div>
               ))}
-              <div style={{...S.card,background:C.gray50}}>
-                <div style={{display:"flex",justifyContent:"space-between",fontSize:13}}>
-                  <span style={{color:C.gray600}}>Buy this month</span>
-                  <span style={{fontWeight:700,color:C.gray900}}>
-                    {sipPlan.filter(p=>p.action==="buy").map(p=>p.ticker).join(", ")}
-                  </span>
-                </div>
-                <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginTop:6}}>
-                  <span style={{color:C.gray600}}>Total</span>
-                  <span style={{fontWeight:700,color:C.teal}}>{fmtAUD(profile.monthlyContrib)}</span>
+            </div>
+            <div style={{marginTop:12,padding:"10px 14px",background:C.tealLight,
+              borderRadius:8,fontSize:12,color:C.tealDark,lineHeight:1.6}}>
+              <strong>Why buy instead of sell?</strong>{" "}
+              Buying underweight ETFs moves your allocation back toward target without triggering
+              capital gains tax (CGT). Selling overweight ETFs would achieve the same result
+              but with a potential tax bill attached.
+            </div>
+          </div>
+
+          {/* Input section */}
+          <div style={{background:"#fff",border:`1px solid ${C.gray200}`,borderRadius:12,
+            padding:"18px 22px",marginBottom:16}}>
+            <div style={{fontSize:13,fontWeight:700,color:C.gray900,marginBottom:14}}>
+              Your monthly investment amount
+            </div>
+            <div style={{display:"flex",alignItems:"flex-end",gap:16,flexWrap:"wrap"}}>
+              <div>
+                <label style={{display:"block",fontSize:12,color:C.gray500,
+                  fontWeight:500,marginBottom:6}}>
+                  How much do you invest each month?
+                </label>
+                <div style={{display:"flex",alignItems:"center",gap:0}}>
+                  <div style={{padding:"9px 12px",background:C.gray100,border:`1px solid ${C.gray300}`,
+                    borderRight:"none",borderRadius:"8px 0 0 8px",fontSize:14,
+                    fontWeight:600,color:C.gray600}}>$</div>
+                  <input type="number"
+                    value={profile.monthlyContrib}
+                    onChange={e=>saveProfile?.({monthlyContrib:parseInt(e.target.value)||0})}
+                    style={{...S.input,width:130,borderRadius:"0 8px 8px 0",fontSize:15,
+                      fontWeight:600,borderLeft:"none"}}/>
                 </div>
               </div>
-              <p style={{fontSize:12,color:C.gray400,padding:"0 0 8px"}}>
-                Tip: buying underweight positions avoids triggering CGT events compared to selling overweight ones first.
-              </p>
+              <div style={{display:"flex",gap:8,flexWrap:"wrap",paddingBottom:2}}>
+                {[500,1000,1500,2000,3000].map(amt=>(
+                  <button key={amt} onClick={()=>saveProfile?.({monthlyContrib:amt})}
+                    style={{
+                      padding:"9px 14px",fontSize:13,fontWeight:500,borderRadius:8,
+                      cursor:"pointer",border:`1px solid ${C.gray200}`,
+                      background:profile.monthlyContrib===amt?C.tealLight:C.white,
+                      color:profile.monthlyContrib===amt?C.tealDark:C.gray600,
+                    }}>
+                    ${amt.toLocaleString()}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {totalBrok>0 && profile.monthlyContrib>0 && (
+              <div style={{marginTop:12,fontSize:12,color:C.gray500}}>
+                ${profile.monthlyContrib.toLocaleString()}/mo adds{" "}
+                <strong style={{color:C.gray700}}>
+                  {((profile.monthlyContrib/totalBrok)*100).toFixed(1)}%
+                </strong>{" "}
+                to your ${Math.round(totalBrok/1000)}K portfolio each month.
+              </div>
+            )}
+          </div>
+
+          {/* No targets set */}
+          {!hasTargets ? (
+            <div style={{background:"#FFF9F0",border:`1px solid ${C.amberLight}`,
+              borderRadius:12,padding:"16px 20px",display:"flex",
+              alignItems:"flex-start",gap:12}}>
+              <span style={{fontSize:20,flexShrink:0}}>⚠️</span>
+              <div>
+                <div style={{fontSize:14,fontWeight:600,color:C.amberDark,marginBottom:4}}>
+                  Target allocations not set
+                </div>
+                <p style={{fontSize:13,color:C.amberDark,lineHeight:1.6,margin:"0 0 10px"}}>
+                  To generate your buy plan, set a target % for each ETF in My Portfolio.
+                  For example: VGS 40%, NDQ 25%, VAS 35%.
+                </p>
+                <a href="/settings" style={{...S.btnPrimary,display:"inline-flex",
+                  fontSize:13,padding:"8px 16px"}}>
+                  Set target allocations →
+                </a>
+              </div>
+            </div>
+          ) : sipPlan.length === 0 ? (
+            <div style={{background:C.tealLight,border:`1px solid ${C.tealMid}`,
+              borderRadius:12,padding:"16px 20px",display:"flex",gap:12,alignItems:"flex-start"}}>
+              <span style={{fontSize:20,flexShrink:0}}>✅</span>
+              <div>
+                <div style={{fontSize:14,fontWeight:600,color:C.tealDark,marginBottom:4}}>
+                  Portfolio is on target — nothing to buy this month
+                </div>
+                <p style={{fontSize:13,color:C.tealDark,lineHeight:1.6,margin:0}}>
+                  All your ETFs are within 2% of their target allocations.
+                  Check back next month after market movements may have shifted your weights.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Summary banner */}
+              <div style={{background:C.teal,borderRadius:10,padding:"14px 20px",
+                marginBottom:14,display:"flex",alignItems:"center",
+                justifyContent:"space-between",flexWrap:"wrap",gap:10}}>
+                <div>
+                  <div style={{fontSize:11,fontWeight:600,letterSpacing:".06em",
+                    textTransform:"uppercase",color:"rgba(255,255,255,0.7)",marginBottom:3}}>
+                    This month's instruction
+                  </div>
+                  <div style={{fontSize:18,fontWeight:700,color:"#fff"}}>
+                    Buy{" "}
+                    <strong style={{color:"#CCFBEF"}}>
+                      {buyItems.map(p=>p.ticker).join(" + ")}
+                    </strong>
+                    {" "}— total{" "}
+                    <strong style={{color:"#CCFBEF"}}>{fmtAUD(totalBuy)}</strong>
+                  </div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:11,color:"rgba(255,255,255,0.7)",marginBottom:2}}>
+                    {holdings.length} ETFs tracked · {sipPlan.filter(p=>p.action!=="buy").length} already on target
+                  </div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,0.85)"}}>
+                    No selling required ✓
+                  </div>
+                </div>
+              </div>
+
+              {/* ETF rows */}
+              {sipPlan.map(item => {
+                const isBuy = item.action==="buy";
+                const driftAbs = Math.abs(item.driftPct);
+                const rc = item.driftPct<-2?C.teal:item.driftPct>2?C.red:C.amber;
+                return (
+                  <div key={item.ticker} style={{
+                    background:isBuy?"#F0FDF8":C.white,
+                    border:`1px solid ${isBuy?C.tealMid:C.gray200}`,
+                    borderRadius:10,padding:"16px 18px",marginBottom:10,
+                  }}>
+                    <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
+                      {/* Left: ticker */}
+                      <div style={{flexShrink:0,minWidth:64}}>
+                        <div style={{fontSize:20,fontWeight:800,
+                          color:isBuy?C.teal:C.gray700}}>{item.ticker}</div>
+                        <div style={{fontSize:11,color:C.gray400,marginTop:1}}>
+                          {item.targetPct}% target
+                        </div>
+                      </div>
+
+                      {/* Middle: bar + percentages */}
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:"flex",justifyContent:"space-between",
+                          fontSize:12,marginBottom:5}}>
+                          <span style={{color:C.gray600}}>
+                            Current: <strong style={{color:C.gray900}}>
+                              {item.currentPct.toFixed(1)}%
+                            </strong>
+                          </span>
+                          <span style={{fontWeight:600,
+                            color:item.driftPct<-2?C.teal:item.driftPct>2?C.red:C.gray400}}>
+                            {item.driftPct<-2
+                              ? `${driftAbs.toFixed(1)}% below target → needs buying`
+                              : item.driftPct>2
+                              ? `${driftAbs.toFixed(1)}% above target → hold`
+                              : "On target ✓"}
+                          </span>
+                        </div>
+                        <div style={{height:8,background:C.gray100,borderRadius:4,
+                          overflow:"hidden",position:"relative"}}>
+                          {/* Target marker */}
+                          <div style={{position:"absolute",top:0,bottom:0,
+                            left:`${Math.min(item.targetPct*1.5,100)}%`,
+                            width:2,background:"rgba(0,0,0,0.15)",borderRadius:1}}/>
+                          <div style={{width:`${Math.min(item.currentPct*1.5,100)}%`,
+                            height:8,background:rc,borderRadius:4,
+                            transition:"width .4s ease"}}/>
+                        </div>
+                        <div style={{fontSize:11,color:C.gray400,marginTop:4}}>
+                          Target: {item.targetPct}%
+                          {totalBrok>0 && ` = ${fmtAUD(item.targetPct/100*totalBrok)}`}
+                        </div>
+                      </div>
+
+                      {/* Right: action */}
+                      <div style={{textAlign:"right",flexShrink:0,minWidth:100}}>
+                        {isBuy ? (
+                          <div style={{background:C.teal,borderRadius:8,
+                            padding:"10px 14px",display:"inline-block"}}>
+                            <div style={{fontSize:18,fontWeight:800,color:"#fff",lineHeight:1}}>
+                              {fmtAUD(item.buyAmount)}
+                            </div>
+                            <div style={{fontSize:11,color:"rgba(255,255,255,0.8)",marginTop:2}}>
+                              buy this month
+                            </div>
+                          </div>
+                        ) : (
+                          <div style={{background:C.gray100,borderRadius:8,
+                            padding:"10px 14px",display:"inline-block"}}>
+                            <div style={{fontSize:14,fontWeight:600,color:C.gray500}}>
+                              Hold
+                            </div>
+                            <div style={{fontSize:11,color:C.gray400,marginTop:2}}>
+                              skip this month
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Summary card */}
+              <div style={{background:"#fff",border:`1px solid ${C.gray200}`,borderRadius:10,
+                padding:"16px 20px",marginBottom:12}}>
+                <div style={{fontSize:13,fontWeight:700,color:C.gray900,marginBottom:10}}>
+                  This month's summary
+                </div>
+                {buyItems.map(p=>(
+                  <div key={p.ticker} style={{display:"flex",justifyContent:"space-between",
+                    alignItems:"center",padding:"7px 0",
+                    borderBottom:`1px solid ${C.gray100}`}}>
+                    <div>
+                      <span style={{fontSize:14,fontWeight:700,color:C.gray900}}>{p.ticker}</span>
+                      <span style={{fontSize:12,color:C.gray400,marginLeft:8}}>
+                        {p.currentPct.toFixed(1)}% → {p.targetPct}% target
+                      </span>
+                    </div>
+                    <span style={{fontSize:15,fontWeight:700,color:C.teal}}>
+                      {fmtAUD(p.buyAmount)}
+                    </span>
+                  </div>
+                ))}
+                <div style={{display:"flex",justifyContent:"space-between",
+                  alignItems:"center",paddingTop:10,marginTop:4}}>
+                  <span style={{fontSize:14,fontWeight:700,color:C.gray900}}>
+                    Total to invest this month
+                  </span>
+                  <span style={{fontSize:20,fontWeight:800,color:C.teal}}>
+                    {fmtAUD(totalBuy)}
+                  </span>
+                </div>
+              </div>
+
+              {/* CGT tip */}
+              <div style={{padding:"10px 14px",background:C.gray50,borderRadius:8,
+                border:`1px solid ${C.gray200}`,fontSize:12,color:C.gray500,lineHeight:1.6}}>
+                💡 <strong style={{color:C.gray700}}>Tax tip:</strong>{" "}
+                Buying underweight positions rather than selling overweight ones avoids
+                triggering a capital gains tax (CGT) event. This strategy lets you
+                rebalance toward your target allocation without a tax bill.
+              </div>
             </>
           )}
         </>
@@ -512,6 +730,7 @@ export function SIPPage({ profile, isSubscriber, onUnlock, saveProfile }: Props)
     </div>
   );
 }
+
 
 // ── SCENARIOS PAGE ────────────────────────────────────────────────────────────
 export function ScenariosPage({ profile, isSubscriber, onUnlock }: Props) {
