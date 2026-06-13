@@ -1,47 +1,19 @@
+$vercel = @'
 {
   "version": 2,
   "regions": ["syd1"],
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-
   "rewrites": [
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "smartsuper.com.au" }],
+      "has": [{ "type": "host", "value": "smartsuperau.com" }],
       "destination": "/(smartsuper)/$1"
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "www.smartsuper.com.au" }],
+      "has": [{ "type": "host", "value": "www.smartsuperau.com" }],
       "destination": "/(smartsuper)/$1"
-    }
-  ],
-
-  "headers": [
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "smartsuper.com.au" }],
-      "headers": [{ "key": "X-Site", "value": "smartsuper" }]
-    },
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "smartetf.com.au" }],
-      "headers": [{ "key": "X-Site", "value": "smartetf" }]
-    }
-  ],
-
-  "redirects": [
-    {
-      "source": "/",
-      "has": [{ "type": "host", "value": "www.smartetf.com.au" }],
-      "destination": "https://smartetf.com.au/",
-      "permanent": true
-    },
-    {
-      "source": "/",
-      "has": [{ "type": "host", "value": "www.smartsuper.com.au" }],
-      "destination": "https://smartsuper.com.au/",
-      "permanent": true
     }
   ]
 }
+'@
+[System.IO.File]::WriteAllText("$PWD\vercel.json", $vercel)
