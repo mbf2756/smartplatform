@@ -1,3 +1,3 @@
-import PortfolioMarketplace from "@/components/dashboard/PortfolioMarketplace";
+import SmartETFDashboard from "@/components/dashboard/DashboardShell";
 export const dynamic = "force-dynamic";
-export default function PortfoliosPage() { return <PortfolioMarketplace/>; }
+export default function Page() { return <SmartETFDashboard/>; }
