@@ -1,0 +1,660 @@
+// SmartETF — Model Share Portfolio Database
+// 50 high-quality stocks from ASX 100, S&P 500, and Nasdaq
+// Data indicative only — not financial advice. Updated monthly.
+
+export type ShareMarket = "ASX" | "NYSE" | "NASDAQ";
+export type ShareCategory = "high-growth" | "large-cap" | "mid-cap" | "income" | "defensive";
+export type ShareSector =
+  | "Technology" | "Financials" | "Healthcare" | "Consumer" | "Industrials"
+  | "Resources" | "Energy" | "Real Estate" | "Communications" | "Utilities";
+
+export interface ModelShare {
+  ticker: string;
+  name: string;
+  market: ShareMarket;
+  index: string;           // ASX 100 / S&P 500 / Nasdaq-100
+  sector: ShareSector;
+  category: ShareCategory;
+  marketCapBn: number;     // AUD billions
+  peRatio: number;
+  divYield: number;        // %
+  return1yr: number;       // % indicative
+  return3yr: number;       // % p.a.
+  return5yr: number;       // % p.a.
+  riskLevel: 1|2|3|4|5;
+  riskLabel: string;
+  color: string;           // sector color for chart
+  tagColor: string;
+  tagBg: string;
+  moat: string;            // competitive advantage
+  desc: string;
+  thesis: string;          // 2-3 sentence investment thesis
+  watchFor: string;        // key risk
+  franked?: boolean;       // AU stocks only
+  frankingPct?: number;
+}
+
+const SECTOR_COLORS: Record<ShareSector, string> = {
+  Technology:     "#3B82F6",
+  Financials:     "#1D9E75",
+  Healthcare:     "#7F77DD",
+  Consumer:       "#D85A30",
+  Industrials:    "#BA7517",
+  Resources:      "#854F0B",
+  Energy:         "#DC2626",
+  "Real Estate":  "#888780",
+  Communications: "#639922",
+  Utilities:      "#0F6E56",
+};
+
+const CAT_BADGE: Record<ShareCategory,{color:string;bg:string}> = {
+  "high-growth": {color:"#791F1F",bg:"#FCEBEB"},
+  "large-cap":   {color:"#0F6E56",bg:"#E1F5EE"},
+  "mid-cap":     {color:"#633806",bg:"#FAEEDA"},
+  "income":      {color:"#185FA5",bg:"#E6F1FB"},
+  "defensive":   {color:"#444441",bg:"#F1EFE8"},
+};
+
+function s(cat:ShareCategory):{tagColor:string;tagBg:string}{
+  return {tagColor:CAT_BADGE[cat].color,tagBg:CAT_BADGE[cat].bg};
+}
+
+export const MODEL_SHARES: ModelShare[] = [
+
+  // ── HIGH GROWTH — US ──────────────────────────────────────────────────────
+  {
+    ticker:"NVDA", name:"NVIDIA Corporation", market:"NASDAQ",
+    index:"Nasdaq-100 / S&P 500", sector:"Technology", category:"high-growth",
+    marketCapBn:3200, peRatio:45, divYield:0.03,
+    return1yr:162, return3yr:92, return5yr:68,
+    riskLevel:5, riskLabel:"Very high",
+    color:SECTOR_COLORS.Technology, ...s("high-growth"),
+    moat:"AI chip monopoly — 80%+ data centre GPU market share",
+    desc:"World's dominant AI accelerator chip company. Powers virtually every major AI model training workload.",
+    thesis:"NVIDIA's CUDA software ecosystem creates an almost insurmountable switching cost. As AI capex accelerates, NVIDIA captures the bulk of the spend. Revenue has grown 10x in 3 years.",
+    watchFor:"Customer concentration — Microsoft, Google, Meta are >50% of revenue. Any AI spend slowdown hits hard.",
+  },
+  {
+    ticker:"MSFT", name:"Microsoft Corporation", market:"NASDAQ",
+    index:"Nasdaq-100 / S&P 500", sector:"Technology", category:"high-growth",
+    marketCapBn:3100, peRatio:38, divYield:0.7,
+    return1yr:18, return3yr:22, return5yr:26,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Technology, ...s("high-growth"),
+    moat:"Enterprise software lock-in — Azure + Office 365 + Teams ecosystem",
+    desc:"Dominant enterprise software and cloud platform. Azure is the #2 cloud provider globally and growing faster than AWS.",
+    thesis:"Azure growing 30%+ annually as enterprises migrate to cloud. Copilot AI integration across Office 365 creates new revenue streams from existing 300M+ subscribers.",
+    watchFor:"Regulatory scrutiny on Activision acquisition and AI dominance. Azure growth deceleration would re-rate the stock.",
+  },
+  {
+    ticker:"AAPL", name:"Apple Inc.", market:"NASDAQ",
+    index:"Nasdaq-100 / S&P 500", sector:"Technology", category:"large-cap",
+    marketCapBn:3400, peRatio:33, divYield:0.5,
+    return1yr:12, return3yr:14, return5yr:22,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Technology, ...s("large-cap"),
+    moat:"Ecosystem lock-in — 2B+ active devices, App Store, iMessage, Apple Pay",
+    desc:"World's largest company by market cap. iPhone drives hardware; Services (App Store, Apple TV+, iCloud) drives recurring revenue growth.",
+    thesis:"Services segment now >$100B annual revenue with 70%+ gross margins. As hardware growth matures, Services becomes the primary value driver. Massive buyback program returns capital consistently.",
+    watchFor:"China revenue (20% of total) at risk from US-China tensions. iPhone upgrade cycle slowing in mature markets.",
+  },
+  {
+    ticker:"GOOGL", name:"Alphabet Inc.", market:"NASDAQ",
+    index:"Nasdaq-100 / S&P 500", sector:"Communications", category:"high-growth",
+    marketCapBn:2200, peRatio:24, divYield:0.5,
+    return1yr:36, return3yr:18, return5yr:20,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Communications, ...s("high-growth"),
+    moat:"Search monopoly — 90%+ global market share. YouTube is the world's #2 website.",
+    desc:"Parent of Google Search, YouTube, and Google Cloud. Advertising revenue funds one of the world's best-funded AI research operations.",
+    thesis:"Google Cloud growing 30%+ and approaching profitability. Search remains structurally dominant despite AI disruption fears. Cheapest of the Magnificent 7 on P/E.",
+    watchFor:"DOJ antitrust case — forced divestiture of Chrome or Android would be material. AI search disruption remains an ongoing risk.",
+  },
+  {
+    ticker:"META", name:"Meta Platforms", market:"NASDAQ",
+    index:"Nasdaq-100 / S&P 500", sector:"Communications", category:"high-growth",
+    marketCapBn:1500, peRatio:28, divYield:0.4,
+    return1yr:52, return3yr:35, return5yr:22,
+    riskLevel:4, riskLabel:"High",
+    color:SECTOR_COLORS.Communications, ...s("high-growth"),
+    moat:"3B+ daily active users across Facebook, Instagram, WhatsApp — unmatched social graph",
+    desc:"World's largest social media platform. Advertising revenue rebounded strongly after 2022 restructuring. Heavy AI investment in ad targeting and Llama models.",
+    thesis:"Ad targeting improved materially after Apple's ATT privacy changes. Llama AI models and AI-generated ad creative are meaningfully improving advertiser ROI. Discipline on costs post-2022 restructure.",
+    watchFor:"Regulatory risk — EU fines, US privacy legislation. Reality Labs VR/AR investment is a significant cash burn ($15B+/yr) with uncertain payoff.",
+  },
+  {
+    ticker:"AMZN", name:"Amazon.com Inc.", market:"NASDAQ",
+    index:"Nasdaq-100 / S&P 500", sector:"Consumer", category:"high-growth",
+    marketCapBn:2100, peRatio:44, divYield:0,
+    return1yr:32, return3yr:12, return5yr:18,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Consumer, ...s("high-growth"),
+    moat:"AWS cloud monopoly + Prime loyalty ecosystem + logistics network",
+    desc:"Dominant in e-commerce and cloud computing. AWS is the world's largest cloud provider with 30%+ market share.",
+    thesis:"AWS margins expanding as AI workloads accelerate cloud adoption. Advertising becoming a high-margin third business leg. Logistics infrastructure creates durable cost advantages vs competitors.",
+    watchFor:"AWS growth deceleration would sharply re-rate the stock. Retail margins thin and capital-intensive.",
+  },
+
+  // ── HIGH GROWTH — AUS ─────────────────────────────────────────────────────
+  {
+    ticker:"WTC", name:"WiseTech Global", market:"ASX",
+    index:"ASX 100", sector:"Technology", category:"high-growth",
+    marketCapBn:28, peRatio:88, divYield:0.1,
+    return1yr:4, return3yr:22, return5yr:38,
+    riskLevel:5, riskLabel:"Very high",
+    color:SECTOR_COLORS.Technology, ...s("high-growth"),
+    moat:"CargoWise is the only truly global logistics software platform — deeply embedded in workflows",
+    desc:"ASX-listed global logistics software company. CargoWise platform used by 17 of the top 25 global freight forwarders.",
+    thesis:"Global logistics is a $500B+ industry with poor technology penetration. WiseTech is the only at-scale global platform. CargoWise contracts are multi-year and deeply integrated — churn is near-zero.",
+    watchFor:"Founder Richard White's operational style creates governance risk. High PE demands sustained growth delivery.",
+  },
+  {
+    ticker:"XRO", name:"Xero Limited", market:"ASX",
+    index:"ASX 100", sector:"Technology", category:"high-growth",
+    marketCapBn:19, peRatio:72, divYield:0,
+    return1yr:28, return3yr:8, return5yr:12,
+    riskLevel:5, riskLabel:"Very high",
+    color:SECTOR_COLORS.Technology, ...s("high-growth"),
+    moat:"Accounting software network effects — accountants drive adoption, subscribers follow",
+    desc:"Cloud-based accounting software for small businesses. Dominant in ANZ, growing in UK and North America.",
+    thesis:"Subscription model with low churn creates predictable high-margin revenue. UK expansion is large opportunity. AI-powered features improve accountant productivity — drives further adoption.",
+    watchFor:"Intuit QuickBooks is formidable competition in the US. Valuation demands continued high growth.",
+  },
+
+  // ── LARGE CAP — US ────────────────────────────────────────────────────────
+  {
+    ticker:"JPM", name:"JPMorgan Chase", market:"NYSE",
+    index:"S&P 500", sector:"Financials", category:"large-cap",
+    marketCapBn:700, peRatio:13, divYield:2.2,
+    return1yr:28, return3yr:18, return5yr:16,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Financials, ...s("large-cap"),
+    moat:"Scale advantage — largest US bank by assets. Consumer + investment bank + asset management",
+    desc:"America's largest bank. Best-managed large US financial institution with consistently high returns on equity.",
+    thesis:"Rising net interest margins in higher-rate environment. Investment banking fee recovery. Jamie Dimon's operational discipline makes JPM the safest large-cap bank bet.",
+    watchFor:"Credit cycle deterioration. Commercial real estate exposure. Rate cuts compress net interest margins.",
+  },
+  {
+    ticker:"V", name:"Visa Inc.", market:"NYSE",
+    index:"S&P 500", sector:"Financials", category:"large-cap",
+    marketCapBn:600, peRatio:32, divYield:0.8,
+    return1yr:14, return3yr:10, return5yr:18,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Financials, ...s("large-cap"),
+    moat:"Network effects — accepted everywhere, used by everyone. Near-zero incremental cost per transaction",
+    desc:"Global payments network processing $15T+ annually. Earns a toll on virtually every card transaction globally.",
+    thesis:"Payments shift from cash to digital is a secular tailwind with decades to run. Visa earns a near-frictionless take-rate and has no credit risk. Emerging markets growth provides next runway.",
+    watchFor:"Central bank digital currencies and real-time payment systems (FedNow) could bypass card networks long-term.",
+  },
+  {
+    ticker:"UNH", name:"UnitedHealth Group", market:"NYSE",
+    index:"S&P 500", sector:"Healthcare", category:"large-cap",
+    marketCapBn:490, peRatio:22, divYield:1.6,
+    return1yr:-18, return3yr:8, return5yr:18,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Healthcare, ...s("large-cap"),
+    moat:"Integrated health insurance + Optum health services — unmatched data and scale",
+    desc:"Largest US health insurer. Optum division provides healthcare services, pharmacy benefits, and data analytics.",
+    thesis:"Healthcare spending grows faster than GDP structurally. UnitedHealth's integrated model creates cost advantages and data moats. Optum is increasingly the growth engine at higher margins than insurance.",
+    watchFor:"Medicare Advantage rate cuts by CMS. DOJ investigation into market practices. Regulatory risk on vertical integration.",
+  },
+  {
+    ticker:"BRK.B", name:"Berkshire Hathaway", market:"NYSE",
+    index:"S&P 500", sector:"Financials", category:"large-cap",
+    marketCapBn:920, peRatio:21, divYield:0,
+    return1yr:18, return3yr:15, return5yr:14,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Financials, ...s("large-cap"),
+    moat:"Insurance float provides cost-of-capital advantage. Portfolio of irreplaceable businesses",
+    desc:"Warren Buffett's diversified conglomerate. Owns GEICO, BNSF Railroad, Berkshire Hathaway Energy, and large stakes in Apple, BoA, Coca-Cola.",
+    thesis:"$170B+ cash hoard ready to deploy in a downturn. Insurance operations generate float at negative cost. Outperforms in risk-off environments — natural portfolio hedge.",
+    watchFor:"Succession from Warren Buffett to Greg Abel creates management transition risk. Cash drag if deployed at poor valuations.",
+  },
+  {
+    ticker:"LLY", name:"Eli Lilly", market:"NYSE",
+    index:"S&P 500", sector:"Healthcare", category:"high-growth",
+    marketCapBn:800, peRatio:62, divYield:0.6,
+    return1yr:42, return3yr:55, return5yr:52,
+    riskLevel:4, riskLabel:"High",
+    color:SECTOR_COLORS.Healthcare, ...s("high-growth"),
+    moat:"GLP-1 obesity/diabetes drug patents — Mounjaro and Zepbound dominate fastest-growing drug category",
+    desc:"Pharmaceutical leader in diabetes and obesity medications. Mounjaro and Zepbound (tirzepatide) are transforming weight-loss treatment.",
+    thesis:"Obesity drug market could reach $130B+ by 2030. Lilly has the best-in-class GLP-1 with superior efficacy data. Pipeline includes cardiovascular and Alzheimer's indications extending the TAM significantly.",
+    watchFor:"Patent cliffs and biosimilar competition. Manufacturing capacity constraints limiting growth. Pricing pressure from US drug legislation.",
+  },
+
+  // ── LARGE CAP — AUS ───────────────────────────────────────────────────────
+  {
+    ticker:"CBA", name:"Commonwealth Bank", market:"ASX",
+    index:"ASX 100", sector:"Financials", category:"large-cap",
+    marketCapBn:220, peRatio:26, divYield:3.1,
+    return1yr:32, return3yr:18, return5yr:14,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Financials, ...s("large-cap"),
+    moat:"#1 brand + largest retail deposit base in Australia + best digital bank platform",
+    desc:"Australia's largest bank by market cap and retail deposits. Consistently the best-performing of the Big Four.",
+    thesis:"CBA trades at a premium to peers because of superior technology, highest ROE, and strongest customer franchise. Net interest margin resilience through rate cycle. Dividend fully franked.",
+    watchFor:"Trading at 3x book — expensive vs global peers. Housing market slowdown impacts mortgage book quality.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"BHP", name:"BHP Group", market:"ASX",
+    index:"ASX 100", sector:"Resources", category:"large-cap",
+    marketCapBn:180, peRatio:12, divYield:4.8,
+    return1yr:-12, return3yr:4, return5yr:10,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Resources, ...s("large-cap"),
+    moat:"World-class low-cost iron ore and copper assets. Scale economics and infrastructure create barriers",
+    desc:"World's largest mining company by market cap. Dominant in iron ore (Pilbara) and growing in copper (energy transition beneficiary).",
+    thesis:"Copper demand doubles by 2035 from electrification and data centres. BHP's Escondida (Chile) is the world's largest copper mine. Iron ore provides reliable free cash flow to fund copper growth.",
+    watchFor:"China steel demand slowdown structurally reduces iron ore pricing. Copper project execution risk in Chile/South America.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"CSL", name:"CSL Limited", market:"ASX",
+    index:"ASX 100", sector:"Healthcare", category:"large-cap",
+    marketCapBn:120, peRatio:38, divYield:1.2,
+    return1yr:-8, return3yr:2, return5yr:8,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Healthcare, ...s("large-cap"),
+    moat:"Global plasma collection network — 350+ centres worldwide, takes decades to replicate",
+    desc:"Global biotechnology leader in plasma-derived therapies, vaccines, and kidney disease. Key products treat rare immune deficiencies.",
+    thesis:"Plasma collection normalised post-COVID with margin recovery underway. Vifor acquisition adds kidney disease treatments. Haemophilia gene therapy pipeline could be transformative.",
+    watchFor:"Plasma collection costs elevated vs pre-COVID. Gene therapy competition could displace haemophilia products long-term.",
+  },
+  {
+    ticker:"MQG", name:"Macquarie Group", market:"ASX",
+    index:"ASX 100", sector:"Financials", category:"large-cap",
+    marketCapBn:72, peRatio:22, divYield:3.4,
+    return1yr:12, return3yr:6, return5yr:14,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Financials, ...s("large-cap"),
+    moat:"Global infrastructure asset management franchise — $900B+ AUM in hard-to-replicate assets",
+    desc:"Global investment bank and asset manager specialising in infrastructure, energy, and real assets.",
+    thesis:"Energy transition creates massive infrastructure investment need. Macquarie is the world's largest infrastructure manager and ideally positioned. Asset management fees are high-quality recurring revenue.",
+    watchFor:"Performance fees volatile — earnings lumpy. Capital markets division exposed to deal volume cycles.",
+    franked:true, frankingPct:40,
+  },
+  {
+    ticker:"WES", name:"Wesfarmers", market:"ASX",
+    index:"ASX 100", sector:"Consumer", category:"large-cap",
+    marketCapBn:70, peRatio:30, divYield:3.2,
+    return1yr:22, return3yr:16, return5yr:14,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Consumer, ...s("large-cap"),
+    moat:"Bunnings is Australia's dominant hardware retailer with irreplaceable store network and supplier relationships",
+    desc:"Diversified Australian conglomerate. Bunnings hardware, Kmart/Target retail, Officeworks, and lithium through Covalent.",
+    thesis:"Bunnings is a compounding machine — dominant market share, high ROIC, consistent growth. Wesfarmers management track record of capital allocation excellence. Lithium optionality for energy transition.",
+    watchFor:"Bunnings UK expansion failed — management must stay disciplined on capital allocation. Kmart/Target structurally challenged by online competition.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"ANZ", name:"ANZ Banking Group", market:"ASX",
+    index:"ASX 100", sector:"Financials", category:"income",
+    marketCapBn:75, peRatio:14, divYield:5.4,
+    return1yr:18, return3yr:10, return5yr:8,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Financials, ...s("income"),
+    moat:"Largest Australian bank in Asia-Pacific institutional banking",
+    desc:"Australia's third-largest bank. Strong institutional banking franchise across Asia-Pacific. Suncorp bank acquisition expands retail presence.",
+    thesis:"Suncorp integration creates scale in Queensland retail. ANZ's institutional bank is the strongest of the Big Four in Asia-Pacific trade finance — a structural growth market.",
+    watchFor:"Suncorp integration risk. NZ banking environment challenging. Trading at discount to CBA for structural reasons.",
+    franked:true, frankingPct:100,
+  },
+
+  // ── MID CAP — US ─────────────────────────────────────────────────────────
+  {
+    ticker:"CRWD", name:"CrowdStrike Holdings", market:"NASDAQ",
+    index:"Nasdaq-100", sector:"Technology", category:"mid-cap",
+    marketCapBn:95, peRatio:80, divYield:0,
+    return1yr:28, return3yr:32, return5yr:48,
+    riskLevel:5, riskLabel:"Very high",
+    color:SECTOR_COLORS.Technology, ...s("mid-cap"),
+    moat:"Falcon platform network effects — more endpoints = better AI threat detection = harder to displace",
+    desc:"Leading cybersecurity platform. Falcon cloud-native platform protects endpoints, cloud workloads, and identity.",
+    thesis:"Cybersecurity spending is non-discretionary and growing. CrowdStrike is consolidating the fragmented security market — customers want one platform vs many point solutions. NRR consistently >120%.",
+    watchFor:"July 2024 outage caused significant reputational damage. High valuation demands continued strong execution.",
+  },
+  {
+    ticker:"SNOW", name:"Snowflake Inc.", market:"NYSE",
+    index:"S&P 500", sector:"Technology", category:"mid-cap",
+    marketCapBn:48, peRatio:200, divYield:0,
+    return1yr:-24, return3yr:-18, return5yr:2,
+    riskLevel:5, riskLabel:"Very high",
+    color:SECTOR_COLORS.Technology, ...s("mid-cap"),
+    moat:"Data cloud — cross-cloud data sharing creates network effects among enterprise data teams",
+    desc:"Cloud data warehousing and analytics platform. Enables companies to store, query, and share data across clouds.",
+    thesis:"Data is the new oil — Snowflake sits at the centre of enterprise data strategy. AI use cases dramatically increase data processing demand. Consumption-based model means revenue scales with customer growth.",
+    watchFor:"Amazon Redshift and Google BigQuery are formidable competitors. Consumption model means revenue can slow in economic downturns.",
+  },
+  {
+    ticker:"DXCM", name:"Dexcom Inc.", market:"NASDAQ",
+    index:"Nasdaq-100 / S&P 500", sector:"Healthcare", category:"mid-cap",
+    marketCapBn:28, peRatio:42, divYield:0,
+    return1yr:-28, return3yr:4, return5yr:22,
+    riskLevel:4, riskLabel:"High",
+    color:SECTOR_COLORS.Healthcare, ...s("mid-cap"),
+    moat:"Continuous glucose monitor market leader — miniaturisation and accuracy advantages",
+    desc:"Market leader in continuous glucose monitors (CGM) for diabetes management. G7 sensor is the market-leading wearable.",
+    thesis:"580M+ diabetics globally — CGM penetration still low outside US. Dexcom G7 extending into non-diabetic metabolic health market. GLP-1 drug adoption increases demand for glucose monitoring.",
+    watchFor:"Apple Watch potential glucose monitoring feature. Abbott's FreeStyle Libre gaining market share. Direct-to-consumer salesforce stumbled in 2024.",
+  },
+
+  // ── MID CAP — AUS ────────────────────────────────────────────────────────
+  {
+    ticker:"REA", name:"REA Group", market:"ASX",
+    index:"ASX 100", sector:"Communications", category:"mid-cap",
+    marketCapBn:26, peRatio:62, divYield:1.1,
+    return1yr:32, return3yr:22, return5yr:20,
+    riskLevel:4, riskLabel:"High",
+    color:SECTOR_COLORS.Communications, ...s("mid-cap"),
+    moat:"realestate.com.au has 80%+ AU property search market share — near-impossible to displace",
+    desc:"Australia's dominant property portal. realestate.com.au is where Australians find property — the verb is the brand.",
+    thesis:"Network effect moat: agents must list on REA, buyers search on REA, which attracts more listings. Property market digitisation ongoing. India (PropTiger) provides optionality on large adjacent market.",
+    watchFor:"Domain (Fairfax) is the #2 competitor and has News Corp backing. REA's valuation is high and exposed to property market cycles.",
+    franked:true, frankingPct:70,
+  },
+  {
+    ticker:"PME", name:"Pro Medicus", market:"ASX",
+    index:"ASX 100", sector:"Healthcare", category:"mid-cap",
+    marketCapBn:22, peRatio:130, divYield:0.4,
+    return1yr:48, return3yr:52, return5yr:54,
+    riskLevel:5, riskLabel:"Very high",
+    color:SECTOR_COLORS.Healthcare, ...s("mid-cap"),
+    moat:"Visage7 radiology platform is the fastest imaging viewer globally — verified by independent benchmarks",
+    desc:"Medical imaging software company. Visage7 viewer is used by major US, European, and Australian hospital networks.",
+    thesis:"Radiology imaging volumes grow 5-8%/yr as populations age. Pro Medicus wins US academic medical centres — the highest-prestige and highest-volume tier. Software-as-a-service model with long contracts and near-zero churn.",
+    watchFor:"Extremely high valuation — >100x earnings. Any slowdown in US contract wins would cause sharp de-rating. Small-cap liquidity risk.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"ALU", name:"Altium Limited", market:"ASX",
+    index:"ASX 100", sector:"Technology", category:"mid-cap",
+    marketCapBn:8, peRatio:48, divYield:1.0,
+    return1yr:2, return3yr:8, return5yr:16,
+    riskLevel:4, riskLabel:"High",
+    color:SECTOR_COLORS.Technology, ...s("mid-cap"),
+    moat:"PCB design software — engineers learn Altium Designer as students, use it for life",
+    desc:"Electronic design automation (EDA) software. Altium Designer is the global standard for printed circuit board design.",
+    thesis:"Electronics are in everything — EV, IoT, AI hardware all need PCB design. Altium 365 cloud platform extends the moat. Renesas acquisition adds semiconductor design tools.",
+    watchFor:"Renesas acquisition removes ASX listing. Cadence and Mentor (Siemens) are larger EDA competitors.",
+  },
+
+  // ── INCOME — US ──────────────────────────────────────────────────────────
+  {
+    ticker:"JNJ", name:"Johnson & Johnson", market:"NYSE",
+    index:"S&P 500", sector:"Healthcare", category:"income",
+    marketCapBn:390, peRatio:15, divYield:3.4,
+    return1yr:2, return3yr:2, return5yr:6,
+    riskLevel:1, riskLabel:"Low",
+    color:SECTOR_COLORS.Healthcare, ...s("income"),
+    moat:"Diversified healthcare — MedTech devices + innovative medicines with strong patent pipelines",
+    desc:"Diversified healthcare company post-Kenvue consumer spinoff. MedTech and pharmaceutical focus.",
+    thesis:"62 consecutive years of dividend increases — Dividend King status. MedTech benefiting from surgical volume recovery. Pharmaceutical pipeline includes oncology and immunology drugs.",
+    watchFor:"Talc litigation liability overhang — though largely resolved via bankruptcy. Loss of Stelara (psoriasis) exclusivity in 2025.",
+  },
+  {
+    ticker:"KO", name:"Coca-Cola Company", market:"NYSE",
+    index:"S&P 500", sector:"Consumer", category:"income",
+    marketCapBn:290, peRatio:24, divYield:3.1,
+    return1yr:8, return3yr:8, return5yr:10,
+    riskLevel:1, riskLabel:"Low",
+    color:SECTOR_COLORS.Consumer, ...s("income"),
+    moat:"Brand value + distribution network — Coke is available in more countries than most governments operate in",
+    desc:"World's most recognised non-alcoholic beverage brand. 200+ countries, 2B+ servings per day.",
+    thesis:"62 consecutive years of dividend increases. Pricing power in emerging markets. Revenue is volume × price — both growing in developing markets. Warren Buffett's longest-held position.",
+    watchFor:"Obesity/health awareness headwind for sugary drinks. Water scarcity in key manufacturing regions.",
+  },
+  {
+    ticker:"PG", name:"Procter & Gamble", market:"NYSE",
+    index:"S&P 500", sector:"Consumer", category:"defensive",
+    marketCapBn:380, peRatio:25, divYield:2.4,
+    return1yr:6, return3yr:8, return5yr:10,
+    riskLevel:1, riskLabel:"Low",
+    color:SECTOR_COLORS.Consumer, ...s("defensive"),
+    moat:"Category-leading brands (Tide, Pampers, Gillette) with pricing power across 180 countries",
+    desc:"Global consumer goods giant. 65+ product categories including Tide, Pampers, Gillette, Oral-B, and Crest.",
+    thesis:"Essential products with pricing power — demand doesn't fall in recessions. 67 consecutive years of dividend growth. R&D and marketing spend defends brand leadership positions.",
+    watchFor:"Private label competition intensifying in cost-conscious retail environments. FX headwinds from strong USD vs emerging market currencies.",
+  },
+
+  // ── INCOME — AUS ─────────────────────────────────────────────────────────
+  {
+    ticker:"TLS", name:"Telstra Group", market:"ASX",
+    index:"ASX 100", sector:"Communications", category:"income",
+    marketCapBn:38, peRatio:22, divYield:4.8,
+    return1yr:6, return3yr:8, return5yr:4,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Communications, ...s("income"),
+    moat:"Australia's largest 5G network — infrastructure advantage in mobile is very hard to replicate",
+    desc:"Australia's largest telecommunications company. Mobile, broadband, and enterprise connectivity.",
+    thesis:"T22/T25 transformation strategy improving margins. 5G network advantage sustainable for years. Infrastructure separation (InfraCo) unlocks asset value. Fully franked dividend at near 5%.",
+    watchFor:"NBN removes fixed-line competitive advantage. TPG and Optus price competition on mobile compresses margins.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"WDS", name:"Woodside Energy", market:"ASX",
+    index:"ASX 100", sector:"Energy", category:"income",
+    marketCapBn:46, peRatio:14, divYield:7.2,
+    return1yr:-18, return3yr:4, return5yr:8,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Energy, ...s("income"),
+    moat:"Long-life LNG assets in North West Shelf and Pluto — scarce global LNG supply assets",
+    desc:"Australia's largest independent oil and gas company. Major LNG exporter to Asia-Pacific markets.",
+    thesis:"Asia's LNG demand growing as coal phase-out accelerates. Scarce long-life LNG supply assets command premium pricing. High dividend yield with franking credits for AU investors.",
+    watchFor:"Energy transition risk — LNG demand uncertain post-2035. BHP merger of petroleum assets created integration complexity. Sangomar (Senegal) execution risk.",
+    franked:true, frankingPct:50,
+  },
+
+  // ── DEFENSIVE ─────────────────────────────────────────────────────────────
+  {
+    ticker:"WMT", name:"Walmart Inc.", market:"NYSE",
+    index:"S&P 500", sector:"Consumer", category:"defensive",
+    marketCapBn:740, peRatio:38, divYield:1.0,
+    return1yr:52, return3yr:28, return5yr:24,
+    riskLevel:1, riskLabel:"Low",
+    color:SECTOR_COLORS.Consumer, ...s("defensive"),
+    moat:"Scale purchasing power — buys more from every supplier globally than any other retailer",
+    desc:"World's largest retailer. US stores, Sam's Club, international operations, and growing e-commerce via Walmart+.",
+    thesis:"Walmart+ gaining subscribers, advertising becoming a high-margin revenue stream. Everyday low prices wins in inflationary environments. E-commerce finally profitable after years of investment.",
+    watchFor:"Amazon grocery expansion is a structural threat. Labour costs rising in tight US job market.",
+  },
+  {
+    ticker:"SHL", name:"Sonic Healthcare", market:"ASX",
+    index:"ASX 100", sector:"Healthcare", category:"defensive",
+    marketCapBn:12, peRatio:24, divYield:4.0,
+    return1yr:4, return3yr:-6, return5yr:4,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Healthcare, ...s("defensive"),
+    moat:"Scale in pathology — laboratory testing has high fixed costs, favouring scale operators",
+    desc:"Global pathology and radiology services company. Operations in Australia, US, Germany, UK, Switzerland.",
+    thesis:"Pathology testing demand grows with ageing population — non-discretionary healthcare. Sonic has scale advantages vs smaller labs in accreditation, equipment, and medical director recruitment.",
+    watchFor:"COVID PCR windfall revenue unwind — normalised earnings lower. Medicare rebate pressure in Australia.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"COL", name:"Coles Group", market:"ASX",
+    index:"ASX 100", sector:"Consumer", category:"defensive",
+    marketCapBn:22, peRatio:26, divYield:3.8,
+    return1yr:18, return3yr:8, return5yr:6,
+    riskLevel:1, riskLabel:"Low",
+    color:SECTOR_COLORS.Consumer, ...s("defensive"),
+    moat:"Duopoly with Woolworths — together control ~65% of Australian grocery market",
+    desc:"Australia's second-largest supermarket chain. 840+ supermarkets and 950+ liquor outlets across Australia.",
+    thesis:"Essential goods demand is recession-proof. Coles Own Brand growing margin contribution. Smarter Selling efficiency program improving store productivity. Fully franked dividend.",
+    watchFor:"ACCC scrutiny of supermarket pricing practices — regulatory intervention risk. Aldi and Costco gaining market share in key categories.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"GMG", name:"Goodman Group", market:"ASX",
+    index:"ASX 100", sector:"Real Estate", category:"large-cap",
+    marketCapBn:55, peRatio:32, divYield:1.2,
+    return1yr:22, return3yr:24, return5yr:28,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS["Real Estate"], ...s("large-cap"),
+    moat:"Irreplaceable urban logistics and data centre land bank globally — takes decades to assemble",
+    desc:"Global industrial property group specialising in logistics and data centre development.",
+    thesis:"E-commerce growth permanently increases demand for last-mile logistics real estate. Data centre development is the new growth engine — AI capex requires massive new facilities. Goodman's land bank in key urban locations is truly scarce.",
+    watchFor:"Rising interest rates compress property cap rates — REIT valuations inversely linked to rates. Development project execution risk at global scale.",
+    franked:false, frankingPct:0,
+  },
+  {
+    ticker:"TCL", name:"Transurban Group", market:"ASX",
+    index:"ASX 100", sector:"Industrials", category:"income",
+    marketCapBn:40, peRatio:200, divYield:4.2,
+    return1yr:12, return3yr:6, return5yr:8,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Industrials, ...s("income"),
+    moat:"Toll road concessions are natural monopolies — you can't build a competing road alongside a motorway",
+    desc:"Australia's largest toll road operator. Owns and operates major motorways in Melbourne, Sydney, Brisbane, and North America.",
+    thesis:"CPI-linked toll escalation provides inflation protection. Traffic volumes resilient post-COVID. Expanding North American operations (495 Express Lanes) provide growth beyond mature AU network.",
+    watchFor:"Highly leveraged balance sheet sensitive to interest rate rises. Concession expiry risk over 30-year horizon.",
+    franked:false, frankingPct:0,
+  },
+
+  // ── MORE HIGH GROWTH / TECH ───────────────────────────────────────────────
+  {
+    ticker:"NOW", name:"ServiceNow", market:"NYSE",
+    index:"S&P 500", sector:"Technology", category:"high-growth",
+    marketCapBn:200, peRatio:65, divYield:0,
+    return1yr:28, return3yr:24, return5yr:32,
+    riskLevel:4, riskLabel:"High",
+    color:SECTOR_COLORS.Technology, ...s("high-growth"),
+    moat:"Enterprise workflow platform deeply embedded in IT operations — switching cost is enormous",
+    desc:"Enterprise cloud workflow automation platform. IT service management, HR, customer service, and AI-powered automation.",
+    thesis:"Every large enterprise has ServiceNow for IT workflows. AI Copilot and Now Assist are expanding the platform into finance, HR, and legal — dramatically increasing ACV per customer.",
+    watchFor:"SAP and Salesforce are expanding into adjacent territories. Valuation premium demands continued 20%+ growth.",
+  },
+  {
+    ticker:"ADBE", name:"Adobe Inc.", market:"NASDAQ",
+    index:"Nasdaq-100 / S&P 500", sector:"Technology", category:"large-cap",
+    marketCapBn:200, peRatio:28, divYield:0,
+    return1yr:2, return3yr:4, return5yr:18,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Technology, ...s("large-cap"),
+    moat:"Creative software monopoly — Photoshop, Illustrator, Premiere are industry standards",
+    desc:"Creative software leader. Photoshop, Illustrator, Premiere, Acrobat — the tools of creative professionals globally.",
+    thesis:"Firefly AI generative tools extend the creative platform into AI-native workflows. Subscription model with low churn. Document Cloud (Acrobat/Sign) is a separate compounding business.",
+    watchFor:"Canva and Figma are disrupting at the entry level. Figma acquisition blocked — $1B breakup fee a cost with no benefit.",
+  },
+  {
+    ticker:"TSLA", name:"Tesla Inc.", market:"NASDAQ",
+    index:"Nasdaq-100 / S&P 500", sector:"Consumer", category:"high-growth",
+    marketCapBn:1000, peRatio:95, divYield:0,
+    return1yr:42, return3yr:-8, return5yr:22,
+    riskLevel:5, riskLabel:"Very high",
+    color:SECTOR_COLORS.Consumer, ...s("high-growth"),
+    moat:"EV manufacturing scale + Supercharger network + autonomous driving data advantage",
+    desc:"Electric vehicle manufacturer and clean energy company. Expanding into energy storage, solar, and autonomous robotaxis.",
+    thesis:"Full Self-Driving and robotaxi network could create a high-margin software-as-a-service business on top of the car business. Energy storage (Megapack) growing rapidly. Tesla has the most real-world autonomous driving data.",
+    watchFor:"BYD and Chinese EV makers competing aggressively on price. Elon Musk governance risk. FSD regulatory approval timeline uncertain.",
+  },
+  {
+    ticker:"ASX", name:"ASX Limited", market:"ASX",
+    index:"ASX 100", sector:"Financials", category:"defensive",
+    marketCapBn:12, peRatio:30, divYield:3.2,
+    return1yr:8, return3yr:2, return5yr:4,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Financials, ...s("defensive"),
+    moat:"Monopoly exchange — every ASX-listed security trades here by regulation",
+    desc:"Australia's primary securities exchange. Operates equities, derivatives, and clearing and settlement infrastructure.",
+    thesis:"Volume-based toll on every Australian share trade. Essential financial market infrastructure. CHESS replacement creates long-term technology investment moat.",
+    watchFor:"CHESS replacement project failed — $250M+ writedown. Regulatory scrutiny on monopoly pricing.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"NAB", name:"National Australia Bank", market:"ASX",
+    index:"ASX 100", sector:"Financials", category:"income",
+    marketCapBn:100, peRatio:16, divYield:4.8,
+    return1yr:14, return3yr:14, return5yr:10,
+    riskLevel:2, riskLabel:"Low–medium",
+    color:SECTOR_COLORS.Financials, ...s("income"),
+    moat:"Leading business banking franchise — most preferred bank for SMEs in Australia",
+    desc:"Australia's second-largest bank. Leading business banking, strong mortgage book, and NZ operations via BNZ.",
+    thesis:"Business banking franchise is NAB's differentiator — SMEs generate better margins than retail mortgages. Ross McEwan's leadership has improved cost discipline significantly.",
+    watchFor:"Business lending cycle exposure — SME defaults rise in economic downturns. NZ housing market weakness.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"RIO", name:"Rio Tinto", market:"ASX",
+    index:"ASX 100", sector:"Resources", category:"income",
+    marketCapBn:140, peRatio:10, divYield:5.8,
+    return1yr:-8, return3yr:2, return5yr:8,
+    riskLevel:3, riskLabel:"Medium",
+    color:SECTOR_COLORS.Resources, ...s("income"),
+    moat:"World-class iron ore assets in Pilbara — lowest-cost iron ore producer globally",
+    desc:"Global mining company. Dominant in iron ore (Pilbara), aluminium, copper, and lithium.",
+    thesis:"Copper and lithium exposure to energy transition. World's lowest-cost iron ore provides reliable high-dividend cash flow. Rincon lithium project in Argentina builds energy transition optionality.",
+    watchFor:"China slowdown directly impacts iron ore price. Juukan Gorge reputational damage still affects Social License. Copper project pipeline slow to develop.",
+    franked:true, frankingPct:100,
+  },
+
+  // ── MORE MID CAP ─────────────────────────────────────────────────────────
+  {
+    ticker:"HUB", name:"Hub24", market:"ASX",
+    index:"ASX 100", sector:"Financials", category:"mid-cap",
+    marketCapBn:4, peRatio:45, divYield:0.8,
+    return1yr:28, return3yr:22, return5yr:32,
+    riskLevel:4, riskLabel:"High",
+    color:SECTOR_COLORS.Financials, ...s("mid-cap"),
+    moat:"Platform network effects — advisers and clients on the same platform creates switching costs",
+    desc:"Australian investment platform for financial advisers. Competing with Netwealth in the independent adviser market.",
+    thesis:"Adviser platform market consolidating to 3-4 players. Hub24 and Netwealth taking share from bank-owned platforms at pace. FUA growth compounds adviser revenue.",
+    watchFor:"Netwealth is a stronger competitor than it appears. Platform price competition compressing margins.",
+    franked:true, frankingPct:100,
+  },
+  {
+    ticker:"NXT", name:"NextDC", market:"ASX",
+    index:"ASX 100", sector:"Technology", category:"high-growth",
+    marketCapBn:6, peRatio:200, divYield:0,
+    return1yr:4, return3yr:12, return5yr:22,
+    riskLevel:4, riskLabel:"High",
+    color:SECTOR_COLORS.Technology, ...s("high-growth"),
+    moat:"Premium carrier-neutral data centres in Australia's major markets — land and power approvals are scarce",
+    desc:"Australia's largest independent data centre operator. Carrier-neutral facilities in Sydney, Melbourne, Brisbane, Perth.",
+    thesis:"AI and cloud computing demand is driving unprecedented data centre capacity requirements. NextDC's carrier-neutral model is preferred by hyperscalers. Power and land approvals create long-term barriers.",
+    watchFor:"Capital-intensive business requires ongoing equity raises. Hyperscalers (AWS, Google) building their own AU facilities creates competition risk.",
+    franked:false, frankingPct:0,
+  },
+  {
+    ticker:"SQ2", name:"Block Inc.", market:"ASX",
+    index:"ASX 100 (CDI)", sector:"Technology", category:"mid-cap",
+    marketCapBn:50, peRatio:35, divYield:0,
+    return1yr:8, return3yr:-18, return5yr:4,
+    riskLevel:5, riskLabel:"Very high",
+    color:SECTOR_COLORS.Technology, ...s("mid-cap"),
+    moat:"Two-sided payment ecosystem — Square (sellers) + Cash App (consumers) create network effects",
+    desc:"Fintech company operating Square merchant payments and Cash App consumer financial services.",
+    thesis:"Cash App has 55M+ monthly actives and is becoming a full financial services platform for unbanked Americans. Square is deeply embedded in small merchant payments. Bitcoin services create optionality.",
+    watchFor:"Credit losses on BNPL (Afterpay) portfolio in economic downturn. Cash App growth decelerating. High competition in both merchant and consumer fintech.",
+  },
+];
+
+export const SHARE_CATEGORIES: Record<string,{label:string;desc:string;color:string}> = {
+  "high-growth": {label:"High growth",  desc:"High-conviction growth companies — typically higher P/E, higher expected returns, higher volatility",  color:"#E24B4A"},
+  "large-cap":   {label:"Large cap",    desc:"Market leaders with durable competitive advantages and proven earnings",                                   color:"#1D9E75"},
+  "mid-cap":     {label:"Mid cap",      desc:"Faster-growing companies with significant runway — higher risk/reward than large cap",                     color:"#BA7517"},
+  "income":      {label:"Income",       desc:"Regular dividend payers — high yield, often franked for AU stocks",                                        color:"#378ADD"},
+  "defensive":   {label:"Defensive",    desc:"Recession-resistant businesses with stable earnings and predictable dividends",                            color:"#888780"},
+};
+
+export const SHARE_RISK_FILTERS = [
+  {id:"all",  label:"All"},
+  {id:"1-2",  label:"Low"},
+  {id:"3",    label:"Medium"},
+  {id:"4",    label:"High"},
+  {id:"5",    label:"Very high"},
+];
+
+export const SHARE_SECTORS: ShareSector[] = [
+  "Technology","Financials","Healthcare","Consumer","Resources",
+  "Energy","Industrials","Communications","Real Estate","Utilities",
+];
+
+export function getSharesByCategory(cat:ShareCategory|"all"):ModelShare[]{
+  return cat==="all"?MODEL_SHARES:MODEL_SHARES.filter(s=>s.category===cat);
+}
+
+export function getSharesByMarket(market:ShareMarket|"all"):ModelShare[]{
+  return market==="all"?MODEL_SHARES:MODEL_SHARES.filter(s=>s.market===market);
+}
