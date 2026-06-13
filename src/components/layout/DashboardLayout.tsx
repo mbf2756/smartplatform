@@ -20,7 +20,7 @@ const FREE = [
 ];
 const SUB = [
   {href:"/optimiser",  label:"Portfolio optimiser",  icon:"↗"},
-  {href:"/sip",        label:"SIP coordinator",      icon:"⟳"},
+  {href:"/sip",        label:"Monthly buy planner",   icon:"⟳"},
   {href:"/scenarios",  label:"What if scenarios",    icon:"◈"},
   {href:"/portfolios", label:"Model ETF portfolios", icon:"⊞"},
 ];
@@ -177,7 +177,7 @@ export default function DashboardLayout({children,isSubscriber,userEmail}:P){
                 {path==="/overlap"   &&"Company-level duplicate detection across your ETFs"}
                 {path==="/exposure"  &&"Geographic, sector, and factor breakdown"}
                 {path==="/optimiser" &&"Personalised ETF action plan based on your goal"}
-                {path==="/sip"       &&"Monthly DCA buy instructions to hit target allocation"}
+                {path==="/sip"       &&"Tell us your monthly amount — we tell you exactly which ETF to buy"}
                 {path==="/scenarios" &&"Goal-based portfolio modelling and comparison"}
                 {path==="/settings"  &&"Update your ETF holdings and personal details"}
               </div>
