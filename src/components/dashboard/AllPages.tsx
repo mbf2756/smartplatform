@@ -132,15 +132,28 @@ export function OptimiserPage({ profile, isSubscriber, onUnlock }: Props) {
     return optimisePortfolio(goal, profile, analysis);
   }, [goal, analysis, profile]);
 
+  const GOAL_RECS: Record<string, {who:string; horizon:string; note:string}> = {
+    minimiseFees:           {who:"Long-term passive investors",       horizon:"Any horizon",   note:"Best for buy-and-hold investors who want to minimise the biggest drag on returns — fees."},
+    maximiseDiversification:{who:"Risk-conscious growth investors",   horizon:"7+ years",      note:"Spreads risk across 6 ETFs and 4 factors. Suitable for investors who want growth without concentration."},
+    maximiseGrowth:         {who:"Aggressive long-term investors",    horizon:"10+ years",     note:"High expected return but high short-term volatility. Accept drawdowns of 30%+ in bad years."},
+    fireStrategy:           {who:"Early retirement planners",         horizon:"10–20 years",   note:"Optimised to hit your FIRE number. AU franking credits provide tax-free retirement income."},
+    minimiseRisk:           {who:"Near-retirees or conservative investors", horizon:"3–7 years", note:"40% bonds significantly reduces drawdown. Suited to investors within 5–10 years of needing the money."},
+    incomeAndDividends:     {who:"Income-focused investors",          horizon:"5+ years",      note:"Targets 4.5–6% after-tax yield via fully franked dividends. Best for investors in 30%+ tax bracket."},
+  };
+
   const goals = [
     {id:"minimiseFees" as OptimiserGoal, icon:"💸", title:"Minimise fees",
-      desc:"Lowest possible MER while maintaining broad coverage"},
+      desc:"Lowest possible MER while maintaining broad diversification. Every 0.1% saved compounds significantly over time."},
     {id:"maximiseDiversification" as OptimiserGoal, icon:"🌍", title:"Maximise diversification",
-      desc:"Broadest exposure across all geographies and factors"},
+      desc:"Broadest exposure across geographies, sizes, and factors. Reduces concentration risk across 6 ETFs."},
     {id:"maximiseGrowth" as OptimiserGoal, icon:"📈", title:"Maximise growth",
-      desc:"Highest expected long-run return with quality tilt"},
+      desc:"Highest expected long-run return with Nasdaq and quality tilt. Best for 10+ year horizons."},
     {id:"fireStrategy" as OptimiserGoal, icon:"🏖️", title:"FIRE strategy",
-      desc:"Early retirement — growth, income, and low fees combined"},
+      desc:"Optimised for early retirement. Growth + franking income + low fees to hit your FIRE number faster."},
+    {id:"minimiseRisk" as OptimiserGoal, icon:"🛡️", title:"Minimise risk",
+      desc:"Capital-preservation focused with 40% bonds. Reduces drawdown — for investors within 5–10 years of a goal."},
+    {id:"incomeAndDividends" as OptimiserGoal, icon:"💰", title:"Income & dividends",
+      desc:"Maximise franked dividend income. Targets 4.5–6% after-tax yield via high-yield AU ETFs with minimal growth sacrifice."},
   ];
 
   return (
@@ -168,7 +181,7 @@ export function OptimiserPage({ profile, isSubscriber, onUnlock }: Props) {
         <>
           <Card>
             <SectionLabel>Choose your optimisation goal</SectionLabel>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
               {goals.map(g => (
                 <button key={g.id} onClick={()=>setGoal(goal===g.id?null:g.id)} style={{
                   textAlign:"left",padding:"16px",borderRadius:10,cursor:"pointer",
@@ -176,9 +189,14 @@ export function OptimiserPage({ profile, isSubscriber, onUnlock }: Props) {
                   border: `1.5px solid ${goal===g.id ? C.teal : C.gray200}`,
                   transition:"all 0.15s",
                 }}>
-                  <div style={{fontSize:24,marginBottom:8}}>{g.icon}</div>
-                  <div style={{fontSize:14,fontWeight:700,color:C.gray900,marginBottom:3}}>{g.title}</div>
+                  <div style={{fontSize:22,marginBottom:8}}>{g.icon}</div>
+                  <div style={{fontSize:13,fontWeight:700,color:C.gray900,marginBottom:3}}>{g.title}</div>
                   <div style={{fontSize:12,color:C.gray500,lineHeight:1.5}}>{g.desc}</div>
+                  {goal===g.id && (
+                    <div style={{marginTop:8,fontSize:11,fontWeight:600,color:C.teal}}>
+                      Selected ✓
+                    </div>
+                  )}
                 </button>
               ))}
             </div>
@@ -186,9 +204,36 @@ export function OptimiserPage({ profile, isSubscriber, onUnlock }: Props) {
 
           {result && (
             <Card accent={C.teal}>
-              <div style={{marginBottom:12}}>
+              <div style={{marginBottom:14}}>
                 <div style={{fontSize:17,fontWeight:700,color:C.gray900}}>{result.label}</div>
-                <div style={{fontSize:13,color:C.gray500,marginTop:2}}>{result.description}</div>
+                <div style={{fontSize:13,color:C.gray500,marginTop:2,marginBottom:10}}>{result.description}</div>
+                {GOAL_RECS[result.goal] && (
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,
+                    padding:"12px 14px",background:C.gray50,borderRadius:8,
+                    border:`1px solid ${C.gray200}`}}>
+                    <div>
+                      <div style={{fontSize:10,fontWeight:600,color:C.gray400,
+                        textTransform:"uppercase",letterSpacing:".06em",marginBottom:3}}>Best for</div>
+                      <div style={{fontSize:12,color:C.gray700,fontWeight:500}}>
+                        {GOAL_RECS[result.goal].who}
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:10,fontWeight:600,color:C.gray400,
+                        textTransform:"uppercase",letterSpacing:".06em",marginBottom:3}}>Recommended horizon</div>
+                      <div style={{fontSize:12,color:C.gray700,fontWeight:500}}>
+                        {GOAL_RECS[result.goal].horizon}
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:10,fontWeight:600,color:C.gray400,
+                        textTransform:"uppercase",letterSpacing:".06em",marginBottom:3}}>Key consideration</div>
+                      <div style={{fontSize:12,color:C.gray600,lineHeight:1.5}}>
+                        {GOAL_RECS[result.goal].note}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
               <MetricGrid items={[
                 {value:`${result.blendedMer}%`, label:"Blended MER"},
