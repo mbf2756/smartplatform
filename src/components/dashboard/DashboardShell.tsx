@@ -9,6 +9,7 @@ import OptimiserPage from "@/components/dashboard/OptimiserPage";
 import SIPPage from "@/components/dashboard/SIPPage";
 import ScenariosPage from "@/components/dashboard/ScenariosPage";
 import PortfolioMarketplace from "@/components/dashboard/PortfolioMarketplace";
+import SharePortfolio from "@/components/dashboard/SharePortfolio";
 import PortfolioSettings from "@/components/dashboard/PortfolioSettings";
 import { createClient } from "@/lib/supabase";
 import { ETF_DB } from "@/data/etfDatabase";
@@ -41,6 +42,7 @@ const DEFAULT_PROFILE: FinancialProfile = {
   },
 };
 
+// Route → component map
 const ROUTE_MAP: Record<string, string> = {
   "/dashboard":  "health",
   "/overlap":    "overlap",
@@ -49,6 +51,7 @@ const ROUTE_MAP: Record<string, string> = {
   "/sip":        "sip",
   "/scenarios":  "scenarios",
   "/portfolios": "portfolios",
+  "/shares":     "shares",
   "/settings":   "settings",
 };
 
@@ -63,6 +66,7 @@ export default function SmartETFDashboard() {
 
   const activePage = ROUTE_MAP[pathname] ?? "health";
 
+  // Auth + profile load
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user: u } }) => {
       if (u) {
@@ -177,6 +181,7 @@ export default function SmartETFDashboard() {
       {activePage==="scenarios" && <ScenariosPage {...pageProps}/>}
       {activePage==="settings"  && <PortfolioSettings {...pageProps}/>}
       {activePage==="portfolios"&& <PortfolioMarketplace/>}
+      {activePage==="shares"    && <SharePortfolio/>}
     </DashboardLayout>
   );
 }
