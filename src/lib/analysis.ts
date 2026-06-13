@@ -310,6 +310,27 @@ const OPTIMISER_CONFIGS: Record<OptimiserGoal, {
       {ticker:"VSO",  targetPct:5,  rationale:"Small-cap premium over 15+ yr horizon"},
     ],
   },
+  minimiseRisk: {
+    label:"Minimise risk", description:"Capital-preservation focused — maximises stability and reduces drawdown while maintaining some growth",
+    blendedMer:0.13, projectedReturn:6.2,
+    mix:[
+      {ticker:"VAS",  targetPct:25, rationale:"AU blue-chips — historically less volatile, plus franking income"},
+      {ticker:"BGBL", targetPct:20, rationale:"Global developed market diversification reduces single-country risk"},
+      {ticker:"VAF",  targetPct:30, rationale:"AU fixed interest — negative correlation to equities smooths volatility"},
+      {ticker:"VIF",  targetPct:15, rationale:"Global bonds provide further non-correlated income stream"},
+      {ticker:"VHY",  targetPct:10, rationale:"High-yield AU equities — dividend income stabilises returns in market falls"},
+    ],
+  },
+  incomeAndDividends: {
+    label:"Income & dividends", description:"Maximise regular tax-effective income through franked dividends and high-yield equities",
+    blendedMer:0.16, projectedReturn:7.8,
+    mix:[
+      {ticker:"VHY",  targetPct:35, rationale:"Highest AU dividend yield — 4.5%+ distributions paid quarterly"},
+      {ticker:"A200", targetPct:30, rationale:"Broad AU market for franking credits — after-tax yield 6%+ for 30% tax bracket"},
+      {ticker:"MVW",  targetPct:20, rationale:"Equal-weight AU gives more exposure to mid-cap dividend payers"},
+      {ticker:"BGBL", targetPct:15, rationale:"Global diversification floor — prevents over-concentration in AU financials"},
+    ],
+  },
 };
 
 export function optimisePortfolio(
