@@ -156,10 +156,122 @@ export function OptimiserPage({ profile, isSubscriber, onUnlock }: Props) {
       desc:"Maximise franked dividend income. Targets 4.5–6% after-tax yield via high-yield AU ETFs with minimal growth sacrifice."},
   ];
 
+  // Derived portfolio stats for the header
+  const holdings      = profile.portfolio?.holdings.filter(h => h.balance > 0) ?? [];
+  const totalBrok     = analysis?.totalBrokerage ?? 0;
+  const totalPortfolio= analysis?.totalPortfolio ?? 0;
+  const blendedMer    = analysis?.feeAnalysis?.blendedMerPct ?? 0;
+  const healthScore   = analysis?.healthScores?.composite ?? 0;
+  const etfCount      = holdings.length;
+  const annualFeeCost = analysis?.feeAnalysis?.annualFeeCost ?? 0;
+  const hasPortfolio  = totalBrok > 0 && etfCount > 0;
+
   return (
     <div>
       <PageHeader badge="SmartETF · Subscriber tool" title="Portfolio optimiser"
-        subtitle="Choose a goal and get a personalised ETF mix with exact buy/sell actions."/>
+        subtitle="Choose a goal and get a personalised ETF action plan — built around your current holdings."/>
+
+      {/* ── Personalised portfolio snapshot ─────────────────────────────── */}
+      {hasPortfolio ? (
+        <div style={{background:"#fff",border:`1px solid ${C.gray200}`,borderRadius:12,
+          padding:"18px 22px",marginBottom:20}}>
+
+          {/* "Based on your portfolio" heading */}
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:C.teal,flexShrink:0}}/>
+            <span style={{fontSize:13,fontWeight:600,color:C.teal}}>
+              Based on your current portfolio
+            </span>
+            <span style={{fontSize:12,color:C.gray400,marginLeft:4}}>
+              — the optimiser uses these holdings to calculate exact buy/sell amounts
+            </span>
+          </div>
+
+          {/* Stats row */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(110px,1fr))",gap:8,marginBottom:14}}>
+            {[
+              {label:"Portfolio value",  value:`$${Math.round(totalBrok/1000)}K`,
+               sub:"brokerage",          color:C.gray900},
+              {label:"ETFs held",        value:`${etfCount}`,
+               sub:"current holdings",   color:C.gray900},
+              {label:"Blended MER",      value:`${blendedMer.toFixed(2)}%`,
+               sub:"annual fee rate",    color:blendedMer>0.3?C.red:blendedMer>0.15?C.amber:C.teal},
+              {label:"Annual fee cost",  value:`$${Math.round(annualFeeCost).toLocaleString()}`,
+               sub:"fees per year",      color:annualFeeCost>1500?C.red:annualFeeCost>800?C.amber:C.gray900},
+              {label:"Health score",     value:`${healthScore}/100`,
+               sub:"current score",      color:healthScore>=75?C.teal:healthScore>=50?C.amber:C.red},
+            ].map(({label,value,sub,color})=>(
+              <div key={label} style={{background:C.gray50,borderRadius:8,padding:"10px 12px",textAlign:"center"}}>
+                <div style={{fontSize:17,fontWeight:700,color,lineHeight:1.2}}>{value}</div>
+                <div style={{fontSize:11,color:C.gray700,fontWeight:500,marginTop:2}}>{label}</div>
+                <div style={{fontSize:10,color:C.gray400,marginTop:1}}>{sub}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Holdings chips */}
+          <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+            <span style={{fontSize:11,color:C.gray400,fontWeight:500,flexShrink:0}}>Holdings:</span>
+            {holdings.map(h=>(
+              <span key={h.ticker} style={{
+                fontSize:12,fontWeight:600,padding:"3px 10px",borderRadius:6,
+                background:C.tealLight,color:C.tealDark,
+              }}>
+                {h.ticker}
+                <span style={{fontSize:11,fontWeight:400,color:C.teal,marginLeft:4}}>
+                  ${Math.round(h.balance/1000)}K
+                </span>
+              </span>
+            ))}
+            {profile.superProfile?.balance && profile.superProfile.balance > 0 && (
+              <span style={{fontSize:12,fontWeight:600,padding:"3px 10px",borderRadius:6,
+                background:C.purpleLight,color:C.purpleDark}}>
+                Super
+                <span style={{fontSize:11,fontWeight:400,color:C.purple,marginLeft:4}}>
+                  ${Math.round(profile.superProfile.balance/1000)}K
+                </span>
+              </span>
+            )}
+            <span style={{fontSize:11,color:C.gray400,marginLeft:4}}>
+              · Total portfolio{" "}
+              <strong style={{color:C.gray700}}>${Math.round(totalPortfolio/1000)}K</strong>
+            </span>
+          </div>
+
+          {/* Update prompt if portfolio seems stale */}
+          <div style={{marginTop:12,padding:"8px 12px",background:C.gray50,borderRadius:6,
+            display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+            <span style={{fontSize:12,color:C.gray500,lineHeight:1.5}}>
+              Not seeing your latest holdings?{" "}
+              <a href="/settings" style={{color:C.teal,fontWeight:600,textDecoration:"none"}}>
+                Update My Portfolio
+              </a>
+              {" "}to get the most accurate buy/sell recommendations.
+            </span>
+            <span style={{fontSize:11,color:C.gray400,flexShrink:0,whiteSpace:"nowrap"}}>
+              Last updated: this session
+            </span>
+          </div>
+        </div>
+      ) : (
+        /* No portfolio state */
+        <div style={{background:"#FFF9F0",border:`1px solid ${C.amberLight}`,borderRadius:12,
+          padding:"16px 20px",marginBottom:20,display:"flex",alignItems:"flex-start",gap:12}}>
+          <span style={{fontSize:20,flexShrink:0}}>⚠️</span>
+          <div>
+            <div style={{fontSize:14,fontWeight:600,color:C.amberDark,marginBottom:4}}>
+              No portfolio data found
+            </div>
+            <p style={{fontSize:13,color:C.amberDark,lineHeight:1.6,margin:"0 0 10px"}}>
+              The optimiser works best when it knows your current holdings — it calculates exact
+              dollar amounts to buy or sell based on what you already own.
+            </p>
+            <a href="/settings" style={{...S.btnPrimary,display:"inline-flex",fontSize:13,padding:"8px 16px"}}>
+              Add my portfolio →
+            </a>
+          </div>
+        </div>
+      )}
 
       {!isSubscriber ? (
         <>
