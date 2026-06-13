@@ -39,6 +39,7 @@ export interface ModelPortfolio {
     inception: number;
   };
   badges: string[];
+  chips: string[];
   holdings: ModelHolding[];
   chartData: number[];    // 12 month index (100 = start)
   pros: string[];
@@ -56,6 +57,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.09, yield:3.8, type:"Accumulation",
     returns:{"1yr":12.4,"3yr":8.9,"5yr":9.8,inception:10.2},
     badges:["Franking credits","ASX-focused","High yield"],
+  chips:["Franking credits","ASX-focused","High yield"],
     chartData:[100,104,98,112,118,127,131,138,145,149,154,162],
     holdings:[
       {ticker:"A200",name:"Betashares Australia 200 ETF",pct:55,mer:0.04,asset:"AU Large Cap",index:"Solactive Australia 200"},
@@ -75,6 +77,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.10, yield:1.2, type:"Accumulation",
     returns:{"1yr":22.1,"3yr":13.4,"5yr":16.2,inception:14.8},
     badges:["Tech tilt","USD exposure","High growth"],
+  chips:["Tech tilt","USD exposure","High growth"],
     chartData:[100,108,115,119,128,141,155,163,171,182,195,208],
     holdings:[
       {ticker:"IVV",name:"iShares S&P 500 ETF",pct:50,mer:0.04,asset:"US Large Cap",index:"S&P 500"},
@@ -93,6 +96,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.17, yield:1.8, type:"Accumulation",
     returns:{"1yr":17.8,"3yr":10.9,"5yr":12.1,inception:11.4},
     badges:["Global diversified","EM included","Low cost"],
+  chips:["Global diversified","EM included","Low cost"],
     chartData:[100,103,99,107,114,121,128,132,139,147,153,160],
     holdings:[
       {ticker:"BGBL",name:"Betashares Global Shares ETF",pct:70,mer:0.08,asset:"Global Developed",index:"Solactive GBS Developed Markets"},
@@ -111,6 +115,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.14, yield:1.5, type:"Accumulation",
     returns:{"1yr":18.9,"3yr":12.1,"5yr":13.8,inception:12.6},
     badges:["FIRE optimised","Low MER","Max compounding"],
+  chips:["FIRE optimised","Low MER","Max compounding"],
     chartData:[100,105,101,110,119,127,136,142,150,158,167,176],
     holdings:[
       {ticker:"BGBL",name:"Betashares Global Shares ETF",pct:40,mer:0.08,asset:"Global Developed",index:"Solactive GBS Developed Markets"},
@@ -131,6 +136,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.06, yield:2.1, type:"Accumulation",
     returns:{"1yr":16.2,"3yr":10.4,"5yr":11.8,inception:10.9},
     badges:["Lowest MER","Two ETF","Ultra simple"],
+  chips:["Lowest MER","Two ETF","Ultra simple"],
     chartData:[100,103,100,108,115,122,129,134,141,148,154,161],
     holdings:[
       {ticker:"BGBL",name:"Betashares Global Shares ETF",pct:70,mer:0.08,asset:"Global Developed",index:"Solactive GBS Developed Markets"},
@@ -150,6 +156,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.18, yield:3.2, type:"Balanced",
     returns:{"1yr":7.4,"3yr":5.2,"5yr":6.1,inception:5.8},
     badges:["Capital preservation","Low volatility","Income + growth"],
+  chips:["Capital preservation","Low volatility","Income + growth"],
     chartData:[100,101,100,103,105,107,109,110,112,114,116,118],
     holdings:[
       {ticker:"VAS", name:"Vanguard Australian Shares ETF",pct:25,mer:0.07,asset:"AU Equities",index:"S&P/ASX 300"},
@@ -169,6 +176,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.14, yield:2.6, type:"Balanced",
     returns:{"1yr":11.8,"3yr":7.6,"5yr":8.4,inception:8.1},
     badges:["60/40 classic","Franking credits","Medium risk"],
+  chips:["60/40 classic","Franking credits","Medium risk"],
     chartData:[100,102,100,105,109,113,117,119,122,125,128,131],
     holdings:[
       {ticker:"BGBL",name:"Betashares Global Shares ETF",pct:35,mer:0.08,asset:"Global Equities",index:"Solactive GBS DM"},
@@ -188,6 +196,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.16, yield:4.1, type:"Income + preservation",
     returns:{"1yr":8.2,"3yr":5.8,"5yr":6.7,inception:6.3},
     badges:["Drawdown optimised","High yield","Capital stability"],
+  chips:["Drawdown optimised","High yield","Capital stability"],
     chartData:[100,100,99,101,103,105,107,108,110,111,113,115],
     holdings:[
       {ticker:"VAS", name:"Vanguard Australian Shares ETF",pct:35,mer:0.07,asset:"AU Equities",index:"S&P/ASX 300"},
@@ -209,6 +218,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.22, yield:4.6, type:"Income",
     returns:{"1yr":9.8,"3yr":6.9,"5yr":7.8,inception:7.4},
     badges:["4.6% yield","High income","Quarterly distributions"],
+  chips:["4.6% yield","High income","Quarterly distributions"],
     chartData:[100,102,101,104,107,110,112,114,116,119,121,124],
     holdings:[
       {ticker:"VHY", name:"Vanguard AU High Yield ETF",pct:40,mer:0.25,asset:"AU High Yield",index:"FTSE AU High Dividend Yield"},
@@ -228,6 +238,7 @@ export const MODEL_PORTFOLIOS: ModelPortfolio[] = [
     mer:0.17, yield:3.9, type:"Income (tax-advantaged)",
     returns:{"1yr":10.4,"3yr":7.3,"5yr":8.1,inception:7.8},
     badges:["Fully franked","Tax-effective","6–7% after-tax yield"],
+  chips:["Fully franked","Tax-effective","6–7% after-tax yield"],
     chartData:[100,101,100,103,106,109,111,113,115,118,120,123],
     holdings:[
       {ticker:"A200",name:"Betashares Australia 200 ETF",pct:45,mer:0.04,asset:"AU Large Cap",index:"Solactive Australia 200"},
