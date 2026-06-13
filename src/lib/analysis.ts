@@ -256,7 +256,7 @@ export function analysePortfolio(profile: FinancialProfile): PortfolioAnalysis |
     healthScores, issues, strengths, overlapPairs,
     geoExposure, sectorExposure, feeAnalysis,
     factorExposure: { growthTilt, valueTilt: 100 - growthTilt, qualityScore, largeCapPct },
-    hasEMExposure: hasEM, hasSmallCap,
+    hasEMExposure: hasEM, hasSmallCap, etfKeys: activeHoldings.map(h => h.ticker),
     totalBrokerage, totalPortfolio,
   };
 }
