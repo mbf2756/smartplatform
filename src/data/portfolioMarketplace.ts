@@ -370,11 +370,11 @@ export const CATEGORIES: Record<string, { label: string; desc: string; color: st
 };
 
 export const RISK_FILTERS = [
-  { id:"all", label:"All risk levels" },
-  { id:"1-2", label:"Conservative" },
-  { id:"3",   label:"Balanced" },
-  { id:"4",   label:"Growth" },
-  { id:"5",   label:"High growth" },
+  { id:"all", label:"All" },
+  { id:"1-2", label:"Low" },
+  { id:"3",   label:"Medium" },
+  { id:"4",   label:"High" },
+  { id:"5",   label:"Very high" },
 ];
 
 export function getByCategory(cat: PortfolioCategory | "all"): ModelPortfolio[] {
