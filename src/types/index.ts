@@ -135,7 +135,9 @@ export type OptimiserGoal =
   | "minimiseFees"
   | "maximiseDiversification"
   | "maximiseGrowth"
-  | "fireStrategy";
+  | "fireStrategy"
+  | "minimiseRisk"
+  | "incomeAndDividends";
 
 export interface OptimisedHolding {
   ticker: string;
