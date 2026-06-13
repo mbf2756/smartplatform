@@ -1,4 +1,3 @@
-$vercel = @'
 {
   "version": 2,
   "regions": ["syd1"],
@@ -13,7 +12,41 @@ $vercel = @'
       "has": [{ "type": "host", "value": "www.smartsuperau.com" }],
       "destination": "/(smartsuper)/$1"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.smartetfau.com" }],
+      "destination": "https://smartetfau.com/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.smartsuperau.com" }],
+      "destination": "https://smartsuperau.com/",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "smartsuperau.com" }],
+      "headers": [{ "key": "x-site", "value": "smartsuper" }]
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.smartsuperau.com" }],
+      "headers": [{ "key": "x-site", "value": "smartsuper" }]
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "smartetfau.com" }],
+      "headers": [{ "key": "x-site", "value": "smartetf" }]
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.smartetfau.com" }],
+      "headers": [{ "key": "x-site", "value": "smartetf" }]
+    }
   ]
 }
-'@
-[System.IO.File]::WriteAllText("$PWD\vercel.json", $vercel)
