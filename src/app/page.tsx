@@ -48,6 +48,11 @@ export default function HomePage() {
                 textDecoration:"none",borderRadius:8,fontWeight:500}}>
               Sign in
             </Link>
+            <Link href="/pricing"
+              style={{padding:"8px 18px",fontSize:14,color:"rgba(255,255,255,0.7)",
+                textDecoration:"none",borderRadius:8,fontWeight:500}}>
+              Pricing
+            </Link>
             <Link href="/auth/signup"
               style={{padding:"9px 22px",fontSize:14,fontWeight:700,
                 color:"#fff",background:T,textDecoration:"none",borderRadius:8}}>
@@ -229,44 +234,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── THE PROBLEM ───────────────────────────────────────────────────────── */}
-      <section style={{padding:"96px 32px",background:"#fff"}}>
-        <div style={{maxWidth:1120,margin:"0 auto"}}>
-          <div style={{maxWidth:640,margin:"0 auto",textAlign:"center" as const,marginBottom:64}}>
-            <div style={{fontSize:12,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",
-              color:T,marginBottom:12}}>The problem every ETF investor has</div>
-            <h2 style={{fontSize:44,fontWeight:800,letterSpacing:"-0.03em",
-              color:"#0F172A",margin:"0 0 16px",lineHeight:1.1}}>
-              You think you're diversified.<br/>You're probably not.
-            </h2>
-            <p style={{fontSize:18,color:"#64748B",lineHeight:1.65,margin:0}}>
-              VGS and BGBL overlap 83%. NDQ and IVV share Apple, Microsoft, and NVIDIA at the top.
-              Most portfolios pay double fees for the same 10 stocks.
-            </p>
-          </div>
-
-          {/* Quote card */}
-          <div style={{background:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:16,
-            padding:"36px 40px",maxWidth:800,margin:"0 auto",position:"relative" as const}}>
-            <div style={{position:"absolute" as const,top:0,left:40,
-              width:4,height:"100%",background:T,borderRadius:2}}/>
-            <div style={{paddingLeft:24}}>
-              <p style={{fontSize:22,fontWeight:500,color:"#0F172A",lineHeight:1.6,
-                margin:"0 0 16px"}}>
-                "I hold VGS, BGBL, and NDQ.{" "}
-                <span style={{color:"#DC2626",fontWeight:700}}>
-                  83% of my global allocation is duplicated across two funds
-                </span>
-                {" "}— paying two MERs for the same Apple and Microsoft stock."
-              </p>
-              <div style={{fontSize:14,color:"#94A3B8"}}>
-                r/AusFinance · the realisation SmartETF surfaces in 60 seconds
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ── FEATURES ──────────────────────────────────────────────────────────── */}
       <section style={{padding:"96px 32px",background:GY}}>
         <div style={{maxWidth:1120,margin:"0 auto"}}>
@@ -425,92 +392,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── PRICING ───────────────────────────────────────────────────────────── */}
-      <section style={{padding:"96px 32px",background:"#fff"}}>
-        <div style={{maxWidth:1120,margin:"0 auto"}}>
-          <div style={{textAlign:"center" as const,marginBottom:56}}>
-            <div style={{fontSize:12,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",
-              color:T,marginBottom:12}}>Pricing</div>
-            <h2 style={{fontSize:44,fontWeight:800,letterSpacing:"-0.03em",
-              color:"#0F172A",margin:"0 0 12px",lineHeight:1.1}}>
-              Start free. Upgrade when you're ready.
-            </h2>
-            <p style={{fontSize:18,color:"#64748B",margin:0}}>
-              No lock-in. Cancel any time. Every plan includes the free tools.
-            </p>
-          </div>
-
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:16}}>
-            {[
-              {name:"Free",price:"$0",period:"forever",
-               desc:"Get your health score, overlap scan, and exposure map.",
-               features:["Health score","Overlap scanner","Exposure map","Build your portfolio guide"],
-               cta:"Start free",href:"/auth/signup",highlight:false,},
-              {name:"Pro",price:"$19",period:"/month",
-               desc:"Full analysis suite — optimiser, buy planner, and model portfolios.",
-               features:["Everything in Free","Portfolio optimiser","Monthly buy planner","15 model ETF portfolios","45 model shares","What if scenarios"],
-               cta:"Start Pro",href:"/auth/signup?plan=pro",highlight:true,},
-              {name:"Premium",price:"$35",period:"/month",
-               desc:"Pro plus CGT tracking, franking credits, and super alignment.",
-               features:["Everything in Pro","CGT harvest alerts","Franking credit analysis","Super alignment tools"],
-               cta:"Start Premium",href:"/auth/signup?plan=premium",highlight:false,},
-              {name:"Bundle",price:"$49",period:"/month",
-               desc:"SmartETF Premium + SmartSuper AU — the complete platform.",
-               features:["SmartETF Premium","SmartSuper AU full access","One login, two platforms","Priority support"],
-               cta:"Best value →",href:"/auth/signup?plan=bundle",highlight:false,},
-            ].map(p=>(
-              <div key={p.name} style={{
-                background:p.highlight?DARK:"#fff",
-                border:p.highlight?`2px solid ${T}`:"1px solid #E2E8F0",
-                borderRadius:16,padding:"28px 24px",
-                position:"relative" as const,
-                boxShadow:p.highlight?"0 8px 32px rgba(0,0,0,0.12)":"none"}}>
-                {p.highlight&&(
-                  <div style={{position:"absolute" as const,top:-13,left:"50%",
-                    transform:"translateX(-50%)",
-                    background:T,color:"#fff",fontSize:11,fontWeight:700,
-                    padding:"4px 14px",borderRadius:20,letterSpacing:".05em",
-                    whiteSpace:"nowrap" as const}}>
-                    MOST POPULAR
-                  </div>
-                )}
-                <div style={{fontSize:14,fontWeight:600,
-                  color:p.highlight?"rgba(255,255,255,0.6)":"#64748B",
-                  marginBottom:4}}>{p.name}</div>
-                <div style={{display:"flex",alignItems:"baseline",gap:4,marginBottom:4}}>
-                  <span style={{fontSize:36,fontWeight:800,
-                    color:p.highlight?"#fff":"#0F172A",
-                    letterSpacing:"-0.03em"}}>{p.price}</span>
-                  <span style={{fontSize:14,color:p.highlight?"rgba(255,255,255,0.5)":"#94A3B8"}}>
-                    {p.period}
-                  </span>
-                </div>
-                <p style={{fontSize:13,color:p.highlight?"rgba(255,255,255,0.55)":"#64748B",
-                  marginBottom:20,lineHeight:1.55}}>{p.desc}</p>
-                <div style={{marginBottom:24}}>
-                  {p.features.map(f=>(
-                    <div key={f} style={{display:"flex",gap:8,alignItems:"center",marginBottom:8}}>
-                      <span style={{color:T,fontSize:14,flexShrink:0}}>✓</span>
-                      <span style={{fontSize:13,
-                        color:p.highlight?"rgba(255,255,255,0.7)":"#475569"}}>{f}</span>
-                    </div>
-                  ))}
-                </div>
-                <Link href={p.href} style={{
-                  display:"block",textAlign:"center" as const,
-                  padding:"11px 0",fontSize:14,fontWeight:700,
-                  borderRadius:9,textDecoration:"none",
-                  background:p.highlight?T:"transparent",
-                  color:p.highlight?"#fff":"#0F172A",
-                  border:p.highlight?"none":`1.5px solid #CBD5E1`}}>
-                  {p.cta}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── SMARTSUPER CROSSLINK ──────────────────────────────────────────────── */}
       <section style={{padding:"64px 32px",background:GY}}>
         <div style={{maxWidth:1120,margin:"0 auto"}}>
@@ -556,34 +437,6 @@ export default function HomePage() {
               <div style={{fontSize:12,color:"rgba(165,180,252,0.5)"}}>across both platforms</div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ─────────────────────────────────────────────────────────── */}
-      <section style={{padding:"96px 32px",
-        background:`linear-gradient(160deg, ${DARK} 0%, #0A1628 100%)`,
-        textAlign:"center" as const}}>
-        <div style={{maxWidth:600,margin:"0 auto"}}>
-          <div style={{fontSize:12,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",
-            color:T,marginBottom:16}}>Start in 2 minutes</div>
-          <h2 style={{fontSize:48,fontWeight:800,letterSpacing:"-0.04em",
-            color:"#fff",margin:"0 0 20px",lineHeight:1.1}}>
-            Your ETF portfolio deserves a health check.
-          </h2>
-          <p style={{fontSize:18,color:"rgba(255,255,255,0.55)",lineHeight:1.65,
-            margin:"0 0 36px"}}>
-            Free. No credit card. No bank connection. Just enter your tickers and get your score.
-          </p>
-          <Link href="/auth/signup"
-            style={{display:"inline-flex",alignItems:"center",gap:10,
-              padding:"16px 40px",fontSize:18,fontWeight:800,
-              color:"#fff",background:T,textDecoration:"none",borderRadius:12,
-              boxShadow:"0 6px 32px rgba(29,158,117,0.4)",letterSpacing:"-0.01em"}}>
-            Get my free health score →
-          </Link>
-          <p style={{fontSize:13,color:"rgba(255,255,255,0.25)",marginTop:16}}>
-            No credit card · Free forever plan available
-          </p>
         </div>
       </section>
 
