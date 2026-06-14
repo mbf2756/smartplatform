@@ -52,6 +52,36 @@ export default function DashboardLayout({children,isSubscriber,userEmail}:P){
         <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:SMT,padding:"6px 16px 4px"}}>Free tools</div>
         {FREE.map(n=>{
           const a=path===n.href;
+
+          // Build your portfolio — prominent highlighted card
+          if(n.href==="/guide") return(
+            <Link key={n.href} href={n.href} style={{
+              display:"block",margin:"6px 10px 4px",
+              padding:"10px 12px",borderRadius:8,
+              textDecoration:"none",
+              background:a?"rgba(59,130,246,0.2)":"rgba(255,255,255,0.06)",
+              border:`1px solid ${a?"rgba(59,130,246,0.5)":"rgba(255,255,255,0.1)"}`,
+              transition:"background .15s",
+            }}>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                <span style={{fontSize:15}}>{n.icon}</span>
+                <span style={{fontSize:13,fontWeight:700,color:"#fff",lineHeight:1.2}}>
+                  {n.label}
+                </span>
+                <span style={{marginLeft:"auto",fontSize:10,fontWeight:700,
+                  padding:"2px 6px",borderRadius:4,
+                  background:"rgba(52,211,153,0.2)",color:"#34D399",
+                  border:"1px solid rgba(52,211,153,0.3)",whiteSpace:"nowrap"}}>
+                  NEW
+                </span>
+              </div>
+              <div style={{fontSize:11,color:"rgba(165,180,252,0.7)",lineHeight:1.4,paddingLeft:23}}>
+                New to investing? Start here — brokers, buying, and more.
+              </div>
+            </Link>
+          );
+
+          // Regular nav items
           return(
             <Link key={n.href} href={n.href} style={{
               display:"flex",alignItems:"center",gap:10,padding:"10px 16px",
