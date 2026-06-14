@@ -141,26 +141,6 @@ export default function DashboardLayout({children,isSubscriber,userEmail}:P){
         </div>
       )}
 
-      {/* App switcher — shows other app only */}
-      <div style={{margin:"0 12px 8px",borderRadius:8,
-        border:"1px solid rgba(255,255,255,0.08)",overflow:"hidden"}}>
-        <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
-          color:"rgba(165,180,252,0.4)",padding:"8px 12px 4px"}}>Switch app</div>
-        <a href="https://smartsuperau.com/dashboard"
-          target="_blank" rel="noopener noreferrer"
-          style={{display:"flex",alignItems:"center",gap:8,padding:"9px 12px",
-            textDecoration:"none",cursor:"pointer",background:"transparent"}}>
-          <div style={{width:26,height:26,borderRadius:6,background:"#7C3AED",
-            display:"flex",alignItems:"center",justifyContent:"center",
-            fontSize:10,fontWeight:800,color:"#fff",flexShrink:0}}>S</div>
-          <div style={{flex:1}}>
-            <div style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.85)"}}>SmartSuper AU</div>
-            <div style={{fontSize:10,color:"rgba(165,180,252,0.5)"}}>Super optimisation</div>
-          </div>
-          <span style={{fontSize:11,color:"rgba(165,180,252,0.4)"}}>↗</span>
-        </a>
-      </div>
-
       {/* Bottom links — exactly SmartSuper */}
       <div style={{borderTop:"1px solid rgba(255,255,255,0.06)"}}>
         <Link href="/settings" style={{display:"flex",alignItems:"center",gap:8,
@@ -237,8 +217,22 @@ export default function DashboardLayout({children,isSubscriber,userEmail}:P){
               </div>
             </div>
           </div>
-          {/* Right: action buttons */}
+          {/* Right: switch app + action buttons */}
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
+            {/* SmartSuper switcher pill */}
+            <a href="https://smartsuperau.com/dashboard"
+              target="_blank" rel="noopener noreferrer"
+              style={{display:"flex",alignItems:"center",gap:7,
+                padding:"7px 13px",fontSize:12,fontWeight:600,borderRadius:8,
+                border:"1px solid #DDD6FE",textDecoration:"none",
+                color:"#7C3AED",background:"#F5F3FF"}}>
+              <div style={{width:18,height:18,borderRadius:4,background:"#7C3AED",
+                display:"flex",alignItems:"center",justifyContent:"center",
+                fontSize:9,fontWeight:800,color:"#fff",flexShrink:0}}>S</div>
+              SmartSuper AU
+              <span style={{fontSize:11,opacity:0.55}}>↗</span>
+            </a>
+            <div style={{width:1,height:20,background:BR,flexShrink:0}}/>
             <Link href="/settings" style={{display:"flex",alignItems:"center",gap:6,
               padding:"8px 16px",fontSize:13,fontWeight:500,borderRadius:8,
               border:`1px solid ${BR}`,textDecoration:"none",color:"#374151",background:WH}}>
