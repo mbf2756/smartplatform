@@ -13,18 +13,18 @@ const WH    = "#FFFFFF";
 const BR    = "#E2E8F0";
 
 const FREE = [
-  {href:"/dashboard", label:"Health score",   icon:"○"},
-  {href:"/overlap",   label:"Overlap scanner",icon:"⊗"},
-  {href:"/exposure",  label:"Exposure map",   icon:"◎"},
-  {href:"/settings",  label:"My portfolio",   icon:"⊙"},
+  {href:"/dashboard", label:"Health score",       icon:"○"},
+  {href:"/overlap",   label:"Overlap scanner",    icon:"⊗"},
+  {href:"/exposure",  label:"Exposure map",       icon:"◎"},
+  {href:"/guide",     label:"Build your portfolio",icon:"📖"},
+  {href:"/settings",  label:"My portfolio",       icon:"⊙"},
 ];
 const SUB = [
   {href:"/optimiser",  label:"Portfolio optimiser",  icon:"↗"},
-  {href:"/sip",        label:"Monthly buy planner",   icon:"⟳"},
+  {href:"/sip",        label:"Monthly buy planner",  icon:"⟳"},
   {href:"/scenarios",  label:"What if scenarios",    icon:"◈"},
   {href:"/portfolios", label:"Model ETF portfolios", icon:"⊞"},
   {href:"/shares",     label:"Model share portfolio",icon:"◉"},
-  {href:"/guide",      label:"Build your portfolio", icon:"📖"},
 ];
 const ALL = [...FREE,...SUB];
 
@@ -111,34 +111,20 @@ export default function DashboardLayout({children,isSubscriber,userEmail}:P){
         </div>
       )}
 
-      {/* App switcher */}
+      {/* App switcher — shows other app only */}
       <div style={{margin:"0 12px 8px",borderRadius:8,
         border:"1px solid rgba(255,255,255,0.08)",overflow:"hidden"}}>
         <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
           color:"rgba(165,180,252,0.4)",padding:"8px 12px 4px"}}>Switch app</div>
-        {/* SmartETF — current, active */}
-        <div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",
-          background:"rgba(59,130,246,0.15)",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
-          <div style={{width:22,height:22,borderRadius:5,background:"#3B82F6",
-            display:"flex",alignItems:"center",justifyContent:"center",
-            fontSize:9,fontWeight:800,color:"#fff",flexShrink:0}}>ETF</div>
-          <div style={{flex:1}}>
-            <div style={{fontSize:12,fontWeight:600,color:"#fff"}}>SmartETF</div>
-            <div style={{fontSize:10,color:"rgba(165,180,252,0.6)"}}>Current app</div>
-          </div>
-          <div style={{width:6,height:6,borderRadius:"50%",background:"#34D399"}}/>
-        </div>
-        {/* SmartSuper — switch link */}
         <a href="https://smartsuperau.com/dashboard"
           target="_blank" rel="noopener noreferrer"
-          style={{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",
-            textDecoration:"none",transition:"background .1s",cursor:"pointer",
-            background:"transparent"}}>
-          <div style={{width:22,height:22,borderRadius:5,background:"#7C3AED",
+          style={{display:"flex",alignItems:"center",gap:8,padding:"9px 12px",
+            textDecoration:"none",cursor:"pointer",background:"transparent"}}>
+          <div style={{width:26,height:26,borderRadius:6,background:"#7C3AED",
             display:"flex",alignItems:"center",justifyContent:"center",
-            fontSize:9,fontWeight:800,color:"#fff",flexShrink:0}}>S</div>
+            fontSize:10,fontWeight:800,color:"#fff",flexShrink:0}}>S</div>
           <div style={{flex:1}}>
-            <div style={{fontSize:12,fontWeight:500,color:"rgba(165,180,252,0.8)"}}>SmartSuper AU</div>
+            <div style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.85)"}}>SmartSuper AU</div>
             <div style={{fontSize:10,color:"rgba(165,180,252,0.5)"}}>Super optimisation</div>
           </div>
           <span style={{fontSize:11,color:"rgba(165,180,252,0.4)"}}>↗</span>
