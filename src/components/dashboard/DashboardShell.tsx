@@ -10,6 +10,7 @@ import SIPPage from "@/components/dashboard/SIPPage";
 import ScenariosPage from "@/components/dashboard/ScenariosPage";
 import PortfolioMarketplace from "@/components/dashboard/PortfolioMarketplace";
 import SharePortfolio from "@/components/dashboard/SharePortfolio";
+import BuildGuide from "@/components/dashboard/BuildGuide";
 import PortfolioSettings from "@/components/dashboard/PortfolioSettings";
 import { createClient } from "@/lib/supabase";
 import { ETF_DB } from "@/data/etfDatabase";
@@ -52,6 +53,7 @@ const ROUTE_MAP: Record<string, string> = {
   "/scenarios":  "scenarios",
   "/portfolios": "portfolios",
   "/shares":     "shares",
+  "/guide":      "guide",
   "/settings":   "settings",
 };
 
@@ -182,6 +184,7 @@ export default function SmartETFDashboard() {
       {activePage==="settings"  && <PortfolioSettings {...pageProps}/>}
       {activePage==="portfolios"&& <PortfolioMarketplace/>}
       {activePage==="shares"    && <SharePortfolio/>}
+      {activePage==="guide"     && <BuildGuide/>}
     </DashboardLayout>
   );
 }
