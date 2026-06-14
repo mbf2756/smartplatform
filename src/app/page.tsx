@@ -317,7 +317,7 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:0}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:0,marginBottom:48}}>
             {[
               {n:"01",title:"Create free account",
                desc:"Email and password. No credit card. No bank connection needed.",icon:"📧"},
@@ -329,8 +329,7 @@ export default function HomePage() {
                desc:"Follow the optimiser's exact buy/sell plan to fix what's wrong.",icon:"✅"},
             ].map(({n,title,desc,icon},i)=>(
               <div key={n} style={{padding:"0 32px",
-                borderRight:i<3?"1px solid #E2E8F0":"none",
-                borderLeft:i>0?"none":"none"}}>
+                borderRight:i<3?"1px solid #E2E8F0":"none"}}>
                 <div style={{fontSize:11,fontWeight:700,color:T,letterSpacing:".1em",
                   marginBottom:14}}>{n}</div>
                 <div style={{fontSize:28,marginBottom:12}}>{icon}</div>
@@ -340,6 +339,18 @@ export default function HomePage() {
                 <p style={{fontSize:14,color:"#64748B",lineHeight:1.65,margin:0}}>{desc}</p>
               </div>
             ))}
+          </div>
+          <div style={{textAlign:"center" as const}}>
+            <Link href="/auth/signup"
+              style={{display:"inline-flex",alignItems:"center",gap:10,
+                padding:"14px 36px",fontSize:16,fontWeight:700,
+                color:"#fff",background:T,textDecoration:"none",borderRadius:10,
+                boxShadow:"0 4px 20px rgba(29,158,117,0.3)"}}>
+              Create my free account →
+            </Link>
+            <p style={{fontSize:13,color:"#94A3B8",marginTop:12}}>
+              Free forever · No credit card · No bank connection
+            </p>
           </div>
         </div>
       </section>
