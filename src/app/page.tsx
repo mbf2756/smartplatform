@@ -355,54 +355,134 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── COMPARISON TABLE ──────────────────────────────────────────────────── */}
+      {/* ── WHAT YOU GET ─────────────────────────────────────────────────────────── */}
       <section style={{padding:"96px 32px",background:GY}}>
-        <div style={{maxWidth:800,margin:"0 auto"}}>
-          <div style={{textAlign:"center" as const,marginBottom:48}}>
+        <div style={{maxWidth:1000,margin:"0 auto"}}>
+          <div style={{textAlign:"center" as const,marginBottom:56}}>
             <div style={{fontSize:12,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",
               color:T,marginBottom:12}}>Why SmartETF</div>
             <h2 style={{fontSize:44,fontWeight:800,letterSpacing:"-0.03em",
-              color:"#0F172A",margin:0,lineHeight:1.1}}>
+              color:"#0F172A",margin:"0 0 14px",lineHeight:1.1}}>
               What you actually get
             </h2>
+            <p style={{fontSize:18,color:"#64748B",margin:"0 auto",maxWidth:560,lineHeight:1.6}}>
+              No other Australian tool gives you this depth of analysis on your ETF portfolio — free or paid.
+            </p>
           </div>
 
-          <div style={{background:"#fff",borderRadius:16,border:"1px solid #E2E8F0",overflow:"hidden"}}>
-            {/* Header */}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 120px 120px",
-              background:"#F8FAFC",borderBottom:"1px solid #E2E8F0",padding:"12px 24px"}}>
-              <div style={{fontSize:12,fontWeight:600,color:"#94A3B8"}}>Feature</div>
-              <div style={{fontSize:12,fontWeight:600,color:"#94A3B8",textAlign:"center" as const}}>Free</div>
-              <div style={{fontSize:12,fontWeight:700,color:T,textAlign:"center" as const}}>Pro $19/mo</div>
+          {/* FREE tier */}
+          <div style={{marginBottom:20}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+              <span style={{fontSize:12,fontWeight:700,padding:"4px 14px",borderRadius:20,
+                background:"#DCFCE7",color:"#166534",letterSpacing:".05em",whiteSpace:"nowrap" as const}}>
+                FREE — always
+              </span>
+              <div style={{flex:1,height:1,background:"#E2E8F0"}}/>
             </div>
-            {[
-              {f:"Portfolio health score (0–100)",free:true,pro:true},
-              {f:"Overlap scanner — company level",free:true,pro:true},
-              {f:"Exposure map — geo, sector, factor",free:true,pro:true},
-              {f:"Build your portfolio guide",free:true,pro:true},
-              {f:"Portfolio optimiser — 6 goals",free:false,pro:true},
-              {f:"Monthly buy planner (DCA)",free:false,pro:true},
-              {f:"What if scenarios",free:false,pro:true},
-              {f:"15 model ETF portfolios",free:false,pro:true},
-              {f:"45 curated model shares",free:false,pro:true},
-              {f:"Fee drag calculator",free:false,pro:true},
-            ].map(({f,free,pro},i)=>(
-              <div key={f} style={{display:"grid",gridTemplateColumns:"1fr 120px 120px",
-                padding:"14px 24px",
-                borderBottom:i<9?"1px solid #F1F5F9":"none",
-                background:i%2===0?"#fff":"#FAFBFC"}}>
-                <div style={{fontSize:14,color:"#475569"}}>{f}</div>
-                <div style={{textAlign:"center" as const,fontSize:16}}>
-                  {free?"✓":"—"}
-                  {free && <span style={{display:"none"}}/>}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+              {[
+                {icon:"⊕",title:"Portfolio health score",
+                 what:"A 0–100 score across 5 dimensions",
+                 desc:"Combines overlap efficiency, fee drag, diversification, super alignment, and age-appropriate risk into one clear number. Instantly shows where your portfolio has problems — and what to fix first."},
+                {icon:"⊗",title:"Overlap scanner",
+                 what:"Company-level duplicate detection",
+                 desc:"Shows exactly which stocks you own twice across your ETFs. VGS + BGBL share 83% of holdings — you're paying two MERs for the same Apple and Microsoft. SmartETF surfaces this in 60 seconds."},
+                {icon:"◎",title:"Exposure map",
+                 what:"Your complete portfolio breakdown",
+                 desc:"Geographic, sector, and factor breakdown — not per fund, but your whole portfolio combined including super. Know exactly what you actually own, not just what you think you own."},
+                {icon:"📖",title:"Build your portfolio guide",
+                 what:"Step-by-step for beginners",
+                 desc:"Choosing a broker, opening an account, making your first trade, selling, monitoring — everything a new investor needs explained in plain English. Includes broker comparison and glossary."},
+              ].map(({icon,title,what,desc})=>(
+                <div key={title} style={{background:"#fff",borderRadius:14,padding:"22px 24px",
+                  border:"1px solid #E2E8F0",display:"flex",gap:16,alignItems:"flex-start"}}>
+                  <div style={{width:44,height:44,borderRadius:12,background:"#DCFCE7",flexShrink:0,
+                    display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>{icon}</div>
+                  <div>
+                    <div style={{fontSize:15,fontWeight:700,color:"#0F172A",marginBottom:3}}>{title}</div>
+                    <div style={{fontSize:11,fontWeight:700,color:T,textTransform:"uppercase" as const,
+                      letterSpacing:".06em",marginBottom:6}}>{what}</div>
+                    <div style={{fontSize:13,color:"#64748B",lineHeight:1.65}}>{desc}</div>
+                  </div>
                 </div>
-                <div style={{textAlign:"center" as const,fontSize:16,color:T,fontWeight:600}}>✓</div>
+              ))}
+            </div>
+          </div>
+
+          {/* PRO tier */}
+          <div style={{marginBottom:32}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+              <span style={{fontSize:12,fontWeight:700,padding:"4px 14px",borderRadius:20,
+                background:"#EFF6FF",color:"#1E40AF",letterSpacing:".05em",whiteSpace:"nowrap" as const}}>
+                PRO — $19/mo
+              </span>
+              <div style={{flex:1,height:1,background:"#E2E8F0"}}/>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
+              {[
+                {icon:"↗",title:"Portfolio optimiser",
+                 what:"6 goals, exact buy/sell amounts",
+                 desc:"Choose minimise fees, maximise growth, minimise risk, FIRE, income, or diversification. Get a complete ETF mix with exact dollar amounts to buy and sell — not vague advice, a specific action plan."},
+                {icon:"⟳",title:"Monthly buy planner",
+                 what:"Your DCA instruction every month",
+                 desc:"Enter your monthly investment amount — $500, $1,500, whatever. SmartETF tells you exactly which ETF is most underweight and how much to buy. No selling, no CGT, no guesswork."},
+                {icon:"◈",title:"What if scenarios",
+                 what:"4 goal portfolios, projected balances",
+                 desc:"Model FIRE at 50, retire at 60, aggressive growth, or balanced. See your projected portfolio balance over 10–20 years and get a rebalance calculator showing exactly what to change today."},
+                {icon:"⊞",title:"15 model ETF portfolios",
+                 what:"Reviewed and updated monthly",
+                 desc:"High growth, growth, balanced, and income portfolios. Each includes full ETF breakdown, MER, 3yr/5yr returns, overlap check, and annual cost on $430K — ready to implement in your broker."},
+                {icon:"◉",title:"45 curated model shares",
+                 what:"ASX 100 · S&P 500 · Nasdaq-100",
+                 desc:"High-quality stocks only — no speculative names. Full investment thesis, competitive moat, and key risks for each. Filter by category, market, and risk level. Detail panel on click."},
+                {icon:"💸",title:"Fee drag calculator",
+                 what:"See what fees really cost over 20 years",
+                 desc:"Even a 0.1% MER difference compounds to tens of thousands over 20 years. See your exact fee drag in dollars, compare scenarios, and find the cheapest equivalent ETF mix."},
+              ].map(({icon,title,what,desc})=>(
+                <div key={title} style={{background:"#fff",borderRadius:14,padding:"20px 20px",
+                  border:"1px solid #BFDBFE",display:"flex",gap:13,alignItems:"flex-start"}}>
+                  <div style={{width:38,height:38,borderRadius:10,background:"#EFF6FF",flexShrink:0,
+                    display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>{icon}</div>
+                  <div>
+                    <div style={{fontSize:14,fontWeight:700,color:"#0F172A",marginBottom:3}}>{title}</div>
+                    <div style={{fontSize:11,fontWeight:700,color:"#2563EB",textTransform:"uppercase" as const,
+                      letterSpacing:".06em",marginBottom:6}}>{what}</div>
+                    <div style={{fontSize:12,color:"#64748B",lineHeight:1.6}}>{desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom CTA */}
+          <div style={{background:`linear-gradient(135deg, ${DARK} 0%, #0F2318 100%)`,
+            borderRadius:16,padding:"32px 40px",
+            display:"flex",alignItems:"center",justifyContent:"space-between",
+            gap:24,flexWrap:"wrap" as const}}>
+            <div>
+              <div style={{fontSize:19,fontWeight:700,color:"#fff",marginBottom:6}}>
+                Start free. Upgrade when you see the value.
               </div>
-            ))}
+              <div style={{fontSize:13,color:"rgba(255,255,255,0.5)"}}>
+                Free forever plan · No credit card · No bank connection needed
+              </div>
+            </div>
+            <div style={{display:"flex",gap:10,flexShrink:0}}>
+              <Link href="/auth/signup" style={{padding:"11px 26px",fontSize:14,
+                fontWeight:700,color:"#fff",background:T,
+                textDecoration:"none",borderRadius:9}}>
+                Start free →
+              </Link>
+              <Link href="/pricing" style={{padding:"11px 22px",fontSize:14,
+                fontWeight:500,color:"rgba(255,255,255,0.7)",
+                border:"1px solid rgba(255,255,255,0.15)",
+                textDecoration:"none",borderRadius:9}}>
+                See pricing
+              </Link>
+            </div>
           </div>
         </div>
       </section>
-
       {/* ── SMARTSUPER CROSSLINK ──────────────────────────────────────────────── */}
       <section style={{padding:"64px 32px",background:GY}}>
         <div style={{maxWidth:1120,margin:"0 auto"}}>
