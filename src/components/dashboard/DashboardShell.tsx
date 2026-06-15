@@ -113,7 +113,11 @@ export default function SmartETFDashboard() {
           tsb:superRes.data.tsb/100, yearOfBirth:superRes.data.year_of_birth,
         };
       }
-      if (subRes.data) setIsSubscriber(true);
+      if (subRes.data) {
+        const sub = subRes.data;
+        const { hasAppAccess } = require("@/lib/stripe-bundles");
+        setIsSubscriber(hasAppAccess(sub, "smartetf"));
+      }
       setProfile(p => ({...p,...loaded}));
     } catch (e) { console.error(e); }
     setLoading(false);
