@@ -21,8 +21,6 @@ const FREE_FEATURES = [
 export default function PricingPage() {
   return (
     <div style={{ fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif", background: GY, color: '#0F172A', minHeight: '100vh' }}>
-
-      {/* Nav */}
       <nav style={{ background: DARK, borderBottom: '1px solid rgba(255,255,255,0.07)', position: 'sticky', top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 32px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', textDecoration: 'none' }}>
@@ -36,8 +34,6 @@ export default function PricingPage() {
       </nav>
 
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '64px 32px' }}>
-
-        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 52 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: T, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Smart Suite pricing</div>
           <h1 style={{ fontSize: 40, fontWeight: 800, color: DARK, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 14 }}>
@@ -49,7 +45,6 @@ export default function PricingPage() {
           </p>
         </div>
 
-        {/* Free tier */}
         <div style={{ background: 'white', borderRadius: 20, padding: '28px', border: '1px solid #E2E8F0', marginBottom: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
             <div>
@@ -74,7 +69,6 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* Bundle pricing */}
         <div style={{ marginBottom: 8 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>
             Subscriber plans — from $150/year · all tools unlocked
@@ -88,7 +82,6 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* Footer */}
       <footer style={{ background: DARK, padding: '32px', marginTop: 40 }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Link href="/" style={{ fontSize: 18, fontWeight: 800, color: '#fff', textDecoration: 'none' }}>
