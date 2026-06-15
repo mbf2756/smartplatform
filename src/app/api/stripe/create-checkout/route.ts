@@ -3,6 +3,8 @@ import { createServerSupabaseClient } from '@/lib/supabase'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: Request) {
   try {
     const { bundleId, couponCode } = await request.json()
@@ -11,7 +13,7 @@ export async function POST(request: Request) {
     if (!bundle) return NextResponse.json({ error: `Unknown bundle: ${bundleId}` }, { status: 400 })
 
     const cookieStore = await cookies()
-    const supabase = createServerSupabaseClient(cookieStore)
+    const supabase = createServerSupabaseClient(cookieStore as any)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
