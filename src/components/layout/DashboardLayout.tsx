@@ -168,7 +168,7 @@ export default function DashboardLayout({children,isSubscriber,userEmail}:P){
 
       {/* SIDEBAR — inline display:flex so it is ALWAYS visible on desktop regardless of CSS loading */}
       <div id="smartetf-sidebar" style={{
-        width:216,minWidth:216,flexShrink:0,
+        width:260,minWidth:260,flexShrink:0,
         position:"sticky",top:0,height:"100vh",overflowY:"auto",
         display:"flex",flexDirection:"column",  /* <-- explicit, not relying on CSS class */
       }}>
@@ -178,7 +178,7 @@ export default function DashboardLayout({children,isSubscriber,userEmail}:P){
       {/* Mobile overlay */}
       {mob&&(
         <div style={{position:"fixed",inset:0,zIndex:100,display:"flex"}}>
-          <div style={{width:216,height:"100%",overflowY:"auto",flexShrink:0}}>
+          <div style={{width:260,height:"100%",overflowY:"auto",flexShrink:0}}>
             <SidebarContent/>
           </div>
           <div style={{flex:1,background:"rgba(0,0,0,0.5)"}} onClick={()=>setMob(false)}/>
