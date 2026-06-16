@@ -32,8 +32,8 @@ export async function POST(request: Request) {
       const appCount = apps.length
       const bundle = appCount >= 3 ? 'triple' : appCount === 2 ? 'double' : 'single'
       await supabaseAdmin.from('subscriptions').update({
-        stripe_customer_id:     session.customer,
-        stripe_subscription_id: session.subscription,
+        stripe_customer:  session.customer,        // fixed: was stripe_customer_id
+        stripe_sub_id:    session.subscription,    // fixed: was stripe_subscription_id
         plan:    bundleId ?? 'bundle',
         apps,
         bundle,
@@ -55,15 +55,15 @@ export async function POST(request: Request) {
       updated_at: new Date().toISOString(),
     }
     if (apps.length > 0) { payload.apps = apps; payload.bundle = bundle }
-    await supabaseAdmin.from('subscriptions').update(payload).eq('stripe_subscription_id', sub.id)
+    await supabaseAdmin.from('subscriptions').update(payload).eq('stripe_sub_id', sub.id)  // fixed: was stripe_subscription_id
   }
 
   if (event.type === 'customer.subscription.deleted') {
     const sub = event.data.object as any
     await supabaseAdmin.from('subscriptions').update({
-      plan: 'free', apps: [], bundle: 'none', status: 'active',
+      plan: 'free', apps: [], bundle: 'none', status: 'cancelled',  // fixed: was 'active'
       updated_at: new Date().toISOString(),
-    }).eq('stripe_subscription_id', sub.id)
+    }).eq('stripe_sub_id', sub.id)  // fixed: was stripe_subscription_id
   }
 
   return NextResponse.json({ received: true })
